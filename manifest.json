@@ -1,0 +1,11 @@
+{
+  "manifest_version": 3,
+  "name": "ClockLock",
+  "version": "1.0.0",
+  "description": "Stop wasting time against your will.",
+  "action": {},
+  "permissions": [],
+  "icons": {
+    "128": "icons/128.png"
+  }
+}

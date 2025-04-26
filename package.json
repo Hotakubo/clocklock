@@ -1,0 +1,8 @@
+{
+  "name": "clocklock",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Stop wasting time against your will.",
+  "scripts": {
+  }
+}
