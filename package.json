@@ -1,26 +1,24 @@
 {
   "name": "clocklock",
-  "displayName": "Clocklock",
-  "version": "0.0.1",
+  "displayName": "ClockLock",
+  "version": "1.0.0",
   "description": "Stop wasting time against your will.",
   "author": "Hotakubo",
   "scripts": {
-    "dev": "plasmo dev",
     "build": "plasmo build",
+    "dev": "plasmo dev",
     "package": "plasmo package"
   },
   "dependencies": {
-    "plasmo": "0.90.3",
-    "react": "18.2.0",
-    "react-dom": "18.2.0"
-  },
-  "devDependencies": {
     "@ianvs/prettier-plugin-sort-imports": "4.1.1",
     "@types/chrome": "0.0.258",
     "@types/node": "20.11.5",
     "@types/react": "18.2.48",
     "@types/react-dom": "18.2.18",
+    "plasmo": "0.90.3",
     "prettier": "3.2.4",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
     "typescript": "5.3.3"
   },
   "manifest": {
