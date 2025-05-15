@@ -13,7 +13,7 @@ const Domain = ({
   return (
     <input
       type="url"
-      className="p-1 rounded-md border border-gray-400 outline-none"
+      className="p-1 rounded-md border border-gray-400 outline-none w-full"
       placeholder={placeholder}
       value={value}
       onChange={(e) => onChange(e.target.value)}
