@@ -94,8 +94,8 @@ function Options() {
         show: true,
         text: 'Please enter a domain.',
         type: 'error'
-      });
-      return;
+      })
+      return
     }
 
     setSnackbar({
