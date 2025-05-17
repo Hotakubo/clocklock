@@ -9,7 +9,7 @@ type Props = {
 
 export default function Select(props: Props) {
   return (
-    <select className="truncate min-w-0 px-1 py-2 rounded-md outline-none bg-white" value={props.selected} onChange={props.onChange}>
+    <select className="truncate min-w-0 px-1 py-1 rounded-md outline-none bg-white" value={props.selected} onChange={props.onChange}>
       {props.options.map(option => {
         return <option
           key={option.value}
