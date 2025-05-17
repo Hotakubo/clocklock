@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Select from './parts/Select'
+import Snackbar from './parts/Snackbar'
 import "./style.css"
 
 const limitTimeList =[
@@ -35,6 +36,12 @@ const Domain = ({
 }
 
 function Options() {
+  const [snackbar, setSnackbar] = useState<{
+    show: boolean;
+    text: string;
+    type: 'normal' | 'error';
+  } | null>(null);
+
   const [data, dataSet] = useState([
     {
       id: 1,
@@ -77,6 +84,27 @@ function Options() {
     dataSet(nextData)
   }
 
+  const onSave = (value: {
+    id: number;
+    domain: string;
+    limitTime: number;
+  }) => {
+    if (!value.domain.trim()) {
+      setSnackbar({
+        show: true,
+        text: 'Please enter a domain.',
+        type: 'error'
+      });
+      return;
+    }
+
+    setSnackbar({
+      show: true,
+      text: 'Saved successfully.',
+      type: 'normal'
+    })
+  }
+
   return (
     <div className="grid justify-center">
       <div className="grid gap-3 w-[30rem] mt-4 p-3 rounded-md border border-gray-400 text-gray-600 text-sm">
@@ -103,11 +131,23 @@ function Options() {
                   })}
                 />
               </div>
-              <button className="p-1 rounded-md border border-gray-400 text-gray-600 text-sm">SAVE</button>
+              <button
+                className="p-1 rounded-md border border-gray-400 text-gray-600 text-sm"
+                onClick={() => onSave(v)}
+              >
+                SAVE
+              </button>
             </div>
           )
         })}
       </div>
+      {snackbar && snackbar.show && (
+        <Snackbar
+          text={snackbar.text}
+          type={snackbar.type}
+          onClose={() => setSnackbar(null)}
+        />
+      )}
     </div>
   )
 }
