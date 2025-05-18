@@ -94,7 +94,6 @@ function Options() {
     domain: string;
     limitTime: number;
   }) => {
-    console.log(newData)
     const nextData = data.map(v => v.id === newData.id ? { ...v,
       domain: newData.domain,
       limitTime: newData.limitTime
