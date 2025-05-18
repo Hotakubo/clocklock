@@ -138,7 +138,7 @@ function Options() {
           return (
             <div key={v.id} className="flex items-center gap-2">
               <Domain
-                placeholder="https://"
+                placeholder="domain.net"
                 value={v.domain}
                 onChange={(value) => onChange({
                   id: v.id,
