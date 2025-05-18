@@ -2,13 +2,19 @@ import { useState, useEffect } from 'react'
 import { Storage } from '@plasmohq/storage'
 import Select from './parts/Select'
 import Snackbar from './parts/Snackbar'
-import "./style.css"
+import './style.css'
+
+type Data = {
+  id: number;
+  domain: string;
+  duration: number;
+}
 
 const storage = new Storage()
 
-const STORAGE_LABEL = 'CLOCK_LOCK_DATA'
+const STORAGE_LABEL = 'CLOCKLOCK_DATA'
 
-const limitTimeList =[
+const durationList =[
   { value: 5 * 60 * 1000, name: '5 minutes' },
   { value: 10 * 60 * 1000, name: '10 minutes' },
   { value: 30 * 60 * 1000, name: '30 minutes' },
@@ -24,27 +30,27 @@ const dataList = [
   {
     id: 1,
     domain: '',
-    limitTime: 0
+    duration: 1 * 60 * 60 * 1000
   },
   {
     id: 2,
     domain: '',
-    limitTime: 0
+    duration: 1 * 60 * 60 * 1000
   },
   {
     id: 3,
     domain: '',
-    limitTime: 0
+    duration: 1 * 60 * 60 * 1000
   },
   {
     id: 4,
     domain: '',
-    limitTime: 0
+    duration: 1 * 60 * 60 * 1000
   },
   {
     id: 5,
     domain: '',
-    limitTime: 0
+    duration: 1 * 60 * 60 * 1000
   }
 ]
 
@@ -79,10 +85,10 @@ function Options() {
 
   useEffect(() => {
     const getData = async () => {
-      const data = await storage.get(STORAGE_LABEL)
+      const data: Data[] = await storage.get(STORAGE_LABEL)
 
       if (data) {
-        dataSet(JSON.parse(data))
+        dataSet(data)
       }
     }
 
@@ -92,20 +98,20 @@ function Options() {
   const onChange = (newData: {
     id: number;
     domain: string;
-    limitTime: number;
+    duration: number;
   }) => {
     const nextData = data.map(v => v.id === newData.id ? { ...v,
       domain: newData.domain,
-      limitTime: newData.limitTime
+      duration: newData.duration
     } : v)
 
     dataSet(nextData)
   }
 
-  const onSave = (value: {
+  const onSave = async (value: {
     id: number;
     domain: string;
-    limitTime: number;
+    duration: number;
   }) => {
     if (!value.domain.trim()) {
       setSnackbar({
@@ -115,6 +121,8 @@ function Options() {
       })
       return
     }
+
+    await storage.set(STORAGE_LABEL, data)
 
     setSnackbar({
       show: true,
@@ -135,17 +143,17 @@ function Options() {
                 onChange={(value) => onChange({
                   id: v.id,
                   domain: value,
-                  limitTime: v.limitTime
+                  duration: v.duration
                 })}
               />
               <div className="w-[8rem] rounded-md border border-gray-400 text-gray-600">
                 <Select
-                  options={limitTimeList}
-                  selected={v.limitTime}
+                  options={durationList}
+                  selected={v.duration}
                   onChange={(value) => onChange({
                     id: v.id,
                     domain: v.domain,
-                    limitTime: parseInt(value.target.value)
+                    duration: parseInt(value.target.value)
                   })}
                 />
               </div>
