@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-type SnackbarType = 'normal' | 'error'
+type SnackbarType = 'info' | 'error'
 
 type Props = {
   text: string;
@@ -11,7 +11,7 @@ type Props = {
 
 export default function Snackbar({
   text,
-  type = 'normal',
+  type = 'info',
   duration = 3000,
   onClose
 }: Props) {

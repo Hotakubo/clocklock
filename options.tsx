@@ -1,7 +1,12 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { Storage } from '@plasmohq/storage'
 import Select from './parts/Select'
 import Snackbar from './parts/Snackbar'
 import "./style.css"
+
+const storage = new Storage()
+
+const STORAGE_LABEL = 'CLOCK_LOCK_DATA'
 
 const limitTimeList =[
   { value: 5 * 60 * 1000, name: '5 minutes' },
@@ -13,6 +18,34 @@ const limitTimeList =[
   { value: 4 * 60 * 60 * 1000, name: '4 hours' },
   { value: 5 * 60 * 60 * 1000, name: '5 hours' },
   { value: 6 * 60 * 60 * 1000, name: '6 hours' }
+]
+
+const dataList = [
+  {
+    id: 1,
+    domain: '',
+    limitTime: 0
+  },
+  {
+    id: 2,
+    domain: '',
+    limitTime: 0
+  },
+  {
+    id: 3,
+    domain: '',
+    limitTime: 0
+  },
+  {
+    id: 4,
+    domain: '',
+    limitTime: 0
+  },
+  {
+    id: 5,
+    domain: '',
+    limitTime: 0
+  }
 ]
 
 const Domain = ({
@@ -39,36 +72,22 @@ function Options() {
   const [snackbar, setSnackbar] = useState<{
     show: boolean;
     text: string;
-    type: 'normal' | 'error';
+    type: 'info' | 'error';
   } | null>(null);
 
-  const [data, dataSet] = useState([
-    {
-      id: 1,
-      domain: '',
-      limitTime: 0
-    },
-    {
-      id: 2,
-      domain: '',
-      limitTime: 0
-    },
-    {
-      id: 3,
-      domain: '',
-      limitTime: 0
-    },
-    {
-      id: 4,
-      domain: '',
-      limitTime: 0
-    },
-    {
-      id: 5,
-      domain: '',
-      limitTime: 0
+  const [data, dataSet] = useState(dataList)
+
+  useEffect(() => {
+    const getData = async () => {
+      const data = await storage.get(STORAGE_LABEL)
+
+      if (data) {
+        dataSet(JSON.parse(data))
+      }
     }
-  ])
+
+    getData()
+  }, [])
 
   const onChange = (newData: {
     id: number;
@@ -101,7 +120,7 @@ function Options() {
     setSnackbar({
       show: true,
       text: 'Saved successfully.',
-      type: 'normal'
+      type: 'info'
     })
   }
 
