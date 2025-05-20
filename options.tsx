@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Storage } from '@plasmohq/storage'
 import Select from './parts/Select'
 import Snackbar from './parts/Snackbar'
+import { STORAGE_LABEL } from './constants'
 import './style.css'
 
 type Data = {
@@ -11,8 +12,6 @@ type Data = {
 }
 
 const storage = new Storage()
-
-const STORAGE_LABEL = 'CLOCKLOCK_DATA'
 
 const durationList =[
   { value: 5 * 60 * 1000, name: '5 minutes' },

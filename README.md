@@ -17,9 +17,7 @@ This is a Google Chrome extension.
 1. Enter the domains you want to restrict
     - Maximum of 5 domains
 2. Enter the browsing time allowed per day
-    - You can select from 30 minutes to a maximum of 6 hours
-3. Press save
-    - The time when you first press the button becomes the start time
+    - You can select from 5 minutes to a maximum of 6 hours
 
 ## Structure
 

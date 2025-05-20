@@ -1,0 +1,1 @@
+export const STORAGE_LABEL = 'CLOCKLOCK_DATA'
