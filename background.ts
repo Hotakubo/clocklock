@@ -29,69 +29,77 @@ const extractDomain = (url: string): string => {
   }
 }
 
+// Check if a tab is active (either focused or playing audio)
+const isTabActive = (tab: chrome.tabs.Tab): boolean => {
+  return tab.active || tab.audible
+}
+
+// Get active domains from tabs
+const getActiveDomainsFromTabs = (tabs: chrome.tabs.Tab[], monitoredDomains: DomainData[]): Set<string> => {
+  const activeDomainsSet = new Set<string>()
+
+  tabs.forEach(tab => {
+    if (!tab.url) return
+
+    const domain = extractDomain(tab.url)
+
+    if (!domain) return
+
+    const domainConfig = monitoredDomains.find(d => d.domain === domain)
+
+    if (!domainConfig) return
+
+    if (isTabActive(tab)) {
+      activeDomainsSet.add(domain)
+    }
+  })
+
+  return activeDomainsSet
+}
+
+// Update time tracking for a domain
+const updateDomainTime = (domain: string, domainConfig: DomainData, now: number): void => {
+  const lastChecked = domainLastCheckedMap.get(domain) || now
+  const timeElapsed = now - lastChecked
+  const currentTotal = domainTimeMap.get(domain) || 0
+  const newTotal = currentTotal + timeElapsed
+
+  domainTimeMap.set(domain, newTotal)
+  domainLastCheckedMap.set(domain, now)
+
+  // Check if duration exceeded
+  if (newTotal >= domainConfig.duration) {
+    chrome.notifications.create({
+      type: 'basic',
+      iconUrl: 'assets/icon.png',
+      title: 'ClockLock',
+      message: `Time limit reached for ${domain}`
+    })
+  }
+}
+
 const checkOpenTabs = async () => {
   const monitoredDomains = await getMonitoredDomains()
   const tabs = await chrome.tabs.query({})
-
   const now = Date.now()
-  const midnight = new Date()
-  midnight.setHours(0, 0, 0, 0)
-  const timeSinceMidnight = now - midnight.getTime()
 
-  // Track domains that are currently open or playing audio
-  const activeDomainsSet = new Set<string>()
+  // Get active domains
+  const activeDomainsSet = getActiveDomainsFromTabs(tabs, monitoredDomains)
 
-  // First pass: collect all active domains
-  for (const tab of tabs) {
-    if (tab.url) {
-      const domain = extractDomain(tab.url)
-
-      if (domain) {
-        // Check if this domain is monitored
-        const domainConfig = monitoredDomains.find(d => d.domain === domain)
-
-        if (domainConfig) {
-          // Consider domain active if tab is visible or playing audio
-          if (tab.active || tab.audible) {
-            activeDomainsSet.add(domain)
-          }
-        }
-      }
-    }
-  }
-
-  // Second pass: update time for active domains
-  for (const domain of activeDomainsSet) {
+  // Update time for active domains
+  activeDomainsSet.forEach(domain => {
     const domainConfig = monitoredDomains.find(d => d.domain === domain)
-
     if (domainConfig) {
-      // Update time tracking
-      const lastChecked = domainLastCheckedMap.get(domain) || now
-      const timeElapsed = now - lastChecked
-      const currentTotal = domainTimeMap.get(domain) || 0
-      const newTotal = currentTotal + timeElapsed
-
-      domainTimeMap.set(domain, newTotal)
-      domainLastCheckedMap.set(domain, now)
-
-      // Check if duration exceeded
-      if (newTotal >= domainConfig.duration) {
-        chrome.notifications.create({
-          type: 'basic',
-          iconUrl: 'assets/icon.png',
-          title: 'ClockLock',
-          message: `Time limit reached for ${domain}`
-        })
-      }
+      updateDomainTime(domain, domainConfig, now)
     }
-  }
+  })
 
-  // Reset last checked time for domains that are no longer active
-  for (const [domain, _] of domainLastCheckedMap) {
+  // Reset last checked time for inactive domains
+  domainLastCheckedMap.forEach((_, domain) => {
     if (!activeDomainsSet.has(domain)) {
       domainLastCheckedMap.set(domain, now)
     }
-  }
+  })
 }
 
 const logDebugInfo = () => {
