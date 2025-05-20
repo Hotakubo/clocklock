@@ -12,8 +12,7 @@ type DomainData = {
   duration: number;
 }
 
-// Get domains from storage
-async function getMonitoredDomains(): Promise<DomainData[]> {
+const getMonitoredDomains = async (): Promise<DomainData[]> => {
   const data = await storage.get(STORAGE_LABEL)
 
   if (!data) return []
@@ -21,8 +20,7 @@ async function getMonitoredDomains(): Promise<DomainData[]> {
   return Array.isArray(data) ? data : []
 }
 
-// Extract domain from URL
-function extractDomain(url: string): string {
+const extractDomain = (url: string): string => {
   try {
     const urlObj = new URL(url)
     return urlObj.hostname
@@ -31,8 +29,7 @@ function extractDomain(url: string): string {
   }
 }
 
-// Check all open tabs
-async function checkOpenTabs() {
+const checkOpenTabs = async () => {
   const monitoredDomains = await getMonitoredDomains()
   const tabs = await chrome.tabs.query({})
 
@@ -48,9 +45,11 @@ async function checkOpenTabs() {
   for (const tab of tabs) {
     if (tab.url) {
       const domain = extractDomain(tab.url)
+
       if (domain) {
         // Check if this domain is monitored
         const domainConfig = monitoredDomains.find(d => d.domain === domain)
+
         if (domainConfig) {
           // Consider domain active if tab is visible or playing audio
           if (tab.active || tab.audible) {
@@ -64,6 +63,7 @@ async function checkOpenTabs() {
   // Second pass: update time for active domains
   for (const domain of activeDomainsSet) {
     const domainConfig = monitoredDomains.find(d => d.domain === domain)
+
     if (domainConfig) {
       // Update time tracking
       const lastChecked = domainLastCheckedMap.get(domain) || now
@@ -94,7 +94,7 @@ async function checkOpenTabs() {
   }
 }
 
-function logDebugInfo() {
+const logDebugInfo = () => {
   for (const [domain, time] of domainTimeMap.entries()) {
     const hours = Math.floor(time / (60 * 60 * 1000))
     const minutes = Math.floor((time % (60 * 60 * 1000)) / (60 * 1000))
@@ -109,7 +109,7 @@ chrome.tabs.onCreated.addListener(() => checkOpenTabs())
 chrome.tabs.onUpdated.addListener(() => checkOpenTabs())
 chrome.tabs.onRemoved.addListener(() => checkOpenTabs())
 
-function setupMidnightReset() {
+const setupMidnightReset = () => {
   const now = new Date()
   const midnight = new Date()
 
