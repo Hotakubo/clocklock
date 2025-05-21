@@ -129,10 +129,6 @@ const checkOpenTabs = async () => {
   }
 }
 
-chrome.tabs.onCreated.addListener(() => checkOpenTabs())
-chrome.tabs.onUpdated.addListener(() => checkOpenTabs())
-chrome.tabs.onRemoved.addListener(() => checkOpenTabs())
-
 const setupMidnightReset = () => {
   const now = new Date()
   const midnight = new Date()
@@ -146,6 +142,10 @@ const setupMidnightReset = () => {
     setupMidnightReset()
   }, timeUntilMidnight)
 }
+
+chrome.tabs.onCreated.addListener(() => checkOpenTabs())
+chrome.tabs.onUpdated.addListener(() => checkOpenTabs())
+chrome.tabs.onRemoved.addListener(() => checkOpenTabs())
 
 setupMidnightReset()
 
