@@ -4,6 +4,7 @@ import { STORAGE_LABEL } from './constants'
 const storage = new Storage()
 const domainTimeMap = new Map<string, number>()
 const domainLastCheckedMap = new Map<string, number>()
+let _resetDate = new Date().setHours(24, 0, 0, 0)
 
 type DomainData = {
   id: number;
@@ -45,8 +46,8 @@ const getActiveDomainsFromTabs = ({
   tabs,
   monitoredDomains
 }: {
-  tabs: chrome.tabs.Tab[],
-  monitoredDomains: DomainData[]
+  tabs: chrome.tabs.Tab[];
+  monitoredDomains: DomainData[];
 }): Set<string> => {
   const activeDomainsSet = new Set<string>()
 
@@ -78,9 +79,9 @@ const updateDomainTime = ({
   domainConfig,
   now
 }: {
-  domain: string,
-  domainConfig: DomainData,
-  now: number
+  domain: string;
+  domainConfig: DomainData;
+  now: number;
 }): void => {
   const lastChecked = domainLastCheckedMap.get(domain) || now
   const timeElapsed = now - lastChecked
@@ -109,9 +110,9 @@ const checkOpenTabs = async () => {
     monitoredDomains
   })
 
-  // Update time for active domains
   for (const domain of activeDomainsSet) {
-    const domainConfig = monitoredDomains.find(d => d.domain === domain)
+    const domainConfig = monitoredDomains.find(v => v.domain === domain)
+
     if (domainConfig) {
       updateDomainTime({
         domain,
@@ -121,7 +122,6 @@ const checkOpenTabs = async () => {
     }
   }
 
-  // Reset last checked time for inactive domains
   for (const [domain, _] of domainLastCheckedMap) {
     if (!activeDomainsSet.has(domain)) {
       domainLastCheckedMap.set(domain, now)
@@ -129,24 +129,8 @@ const checkOpenTabs = async () => {
   }
 }
 
-const setupMidnightReset = () => {
-  const now = new Date()
-  const midnight = new Date()
-
-  midnight.setHours(24, 0, 0, 0)
-
-  const timeUntilMidnight = midnight.getTime() - now.getTime()
-
-  setTimeout(() => {
-    domainTimeMap.clear()
-    setupMidnightReset()
-  }, timeUntilMidnight)
-}
-
 chrome.tabs.onCreated.addListener(() => checkOpenTabs())
 chrome.tabs.onUpdated.addListener(() => checkOpenTabs())
 chrome.tabs.onRemoved.addListener(() => checkOpenTabs())
-
-setupMidnightReset()
 
 setInterval(() => checkOpenTabs(), 5000)
