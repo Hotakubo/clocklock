@@ -2,7 +2,6 @@ import { Storage } from '@plasmohq/storage'
 import { STORAGE_LABEL } from './constants'
 
 const storage = new Storage()
-
 const domainTimeMap = new Map<string, number>()
 const domainLastCheckedMap = new Map<string, number>()
 
@@ -23,18 +22,17 @@ const getMonitoredDomains = async (): Promise<DomainData[]> => {
 const extractDomain = (url: string): string => {
   try {
     const urlObj = new URL(url)
+
     return urlObj.hostname
   } catch {
     return ''
   }
 }
 
-// Check if a tab is active (either focused or playing audio)
 const isTabActive = (tab: chrome.tabs.Tab): boolean => {
   return tab.active || tab.audible
 }
 
-// Get active domains from tabs
 const getActiveDomainsFromTabs = (tabs: chrome.tabs.Tab[], monitoredDomains: DomainData[]): Set<string> => {
   const activeDomainsSet = new Set<string>()
 
@@ -57,7 +55,6 @@ const getActiveDomainsFromTabs = (tabs: chrome.tabs.Tab[], monitoredDomains: Dom
   return activeDomainsSet
 }
 
-// Update time tracking for a domain
 const updateDomainTime = (domain: string, domainConfig: DomainData, now: number): void => {
   const lastChecked = domainLastCheckedMap.get(domain) || now
   const timeElapsed = now - lastChecked
@@ -67,7 +64,6 @@ const updateDomainTime = (domain: string, domainConfig: DomainData, now: number)
   domainTimeMap.set(domain, newTotal)
   domainLastCheckedMap.set(domain, now)
 
-  // Check if duration exceeded
   if (newTotal >= domainConfig.duration) {
     chrome.notifications.create({
       type: 'basic',
@@ -79,11 +75,9 @@ const updateDomainTime = (domain: string, domainConfig: DomainData, now: number)
 }
 
 const checkOpenTabs = async () => {
-  const monitoredDomains = await getMonitoredDomains()
-  const tabs = await chrome.tabs.query({})
   const now = Date.now()
-
-  // Get active domains
+  const tabs = await chrome.tabs.query({})
+  const monitoredDomains = await getMonitoredDomains()
   const activeDomainsSet = getActiveDomainsFromTabs(tabs, monitoredDomains)
 
   // Update time for active domains
@@ -101,17 +95,6 @@ const checkOpenTabs = async () => {
     }
   })
 }
-
-const logDebugInfo = () => {
-  for (const [domain, time] of domainTimeMap.entries()) {
-    const hours = Math.floor(time / (60 * 60 * 1000))
-    const minutes = Math.floor((time % (60 * 60 * 1000)) / (60 * 1000))
-    const seconds = Math.floor((time % (60 * 1000)) / 1000)
-  }
-}
-
-setInterval(checkOpenTabs, 5000)
-setInterval(logDebugInfo, 60000)
 
 chrome.tabs.onCreated.addListener(() => checkOpenTabs())
 chrome.tabs.onUpdated.addListener(() => checkOpenTabs())
@@ -132,3 +115,5 @@ const setupMidnightReset = () => {
 }
 
 setupMidnightReset()
+
+setInterval(checkOpenTabs, 5000)
