@@ -19,7 +19,11 @@ const getMonitoredDomains = async (): Promise<DomainData[]> => {
   return Array.isArray(data) ? data : []
 }
 
-const extractDomain = (url: string): string => {
+const extractDomain = ({
+  url
+}: {
+  url: string
+}): string => {
   try {
     const urlObj = new URL(url)
 
@@ -29,33 +33,55 @@ const extractDomain = (url: string): string => {
   }
 }
 
-const isTabActive = (tab: chrome.tabs.Tab): boolean => {
+const isTabActive = ({
+  tab
+}: {
+  tab: chrome.tabs.Tab
+}): boolean => {
   return tab.active || tab.audible
 }
 
-const getActiveDomainsFromTabs = (tabs: chrome.tabs.Tab[], monitoredDomains: DomainData[]): Set<string> => {
+const getActiveDomainsFromTabs = ({
+  tabs,
+  monitoredDomains
+}: {
+  tabs: chrome.tabs.Tab[],
+  monitoredDomains: DomainData[]
+}): Set<string> => {
   const activeDomainsSet = new Set<string>()
 
-  tabs.forEach(tab => {
-    if (!tab.url) return
+  for (const tab of tabs) {
+    if (!tab.url) continue
 
-    const domain = extractDomain(tab.url)
+    const domain = extractDomain({
+      url: tab.url
+    })
 
-    if (!domain) return
+    if (!domain) continue
 
     const domainConfig = monitoredDomains.find(d => d.domain === domain)
 
-    if (!domainConfig) return
+    if (!domainConfig) continue
 
-    if (isTabActive(tab)) {
+    if (isTabActive({
+      tab
+    })) {
       activeDomainsSet.add(domain)
     }
-  })
+  }
 
   return activeDomainsSet
 }
 
-const updateDomainTime = (domain: string, domainConfig: DomainData, now: number): void => {
+const updateDomainTime = ({
+  domain,
+  domainConfig,
+  now
+}: {
+  domain: string,
+  domainConfig: DomainData,
+  now: number
+}): void => {
   const lastChecked = domainLastCheckedMap.get(domain) || now
   const timeElapsed = now - lastChecked
   const currentTotal = domainTimeMap.get(domain) || 0
@@ -78,22 +104,29 @@ const checkOpenTabs = async () => {
   const now = Date.now()
   const tabs = await chrome.tabs.query({})
   const monitoredDomains = await getMonitoredDomains()
-  const activeDomainsSet = getActiveDomainsFromTabs(tabs, monitoredDomains)
-
-  // Update time for active domains
-  activeDomainsSet.forEach(domain => {
-    const domainConfig = monitoredDomains.find(d => d.domain === domain)
-    if (domainConfig) {
-      updateDomainTime(domain, domainConfig, now)
-    }
+  const activeDomainsSet = getActiveDomainsFromTabs({
+    tabs,
+    monitoredDomains
   })
 
+  // Update time for active domains
+  for (const domain of activeDomainsSet) {
+    const domainConfig = monitoredDomains.find(d => d.domain === domain)
+    if (domainConfig) {
+      updateDomainTime({
+        domain,
+        domainConfig,
+        now
+      })
+    }
+  }
+
   // Reset last checked time for inactive domains
-  domainLastCheckedMap.forEach((_, domain) => {
+  for (const [domain, _] of domainLastCheckedMap) {
     if (!activeDomainsSet.has(domain)) {
       domainLastCheckedMap.set(domain, now)
     }
-  })
+  }
 }
 
 chrome.tabs.onCreated.addListener(() => checkOpenTabs())
@@ -116,4 +149,4 @@ const setupMidnightReset = () => {
 
 setupMidnightReset()
 
-setInterval(checkOpenTabs, 5000)
+setInterval(() => checkOpenTabs(), 5000)
