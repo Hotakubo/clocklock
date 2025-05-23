@@ -97,7 +97,7 @@ function Options() {
           }
         }
 
-        dataSet(data)
+        dataSet(setDataList)
       }
 
     }
