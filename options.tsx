@@ -1,17 +1,10 @@
-import { useState, useEffect } from 'react'
+import type { Data } from './types'
+import { useState, useEffect, useId } from 'react'
 import { Storage } from '@plasmohq/storage'
 import Select from './parts/Select'
 import Snackbar from './parts/Snackbar'
 import { STORAGE_LABEL } from './constants'
 import './style.css'
-
-type Data = {
-  id: number;
-  domain: string;
-  duration: number;
-  elapsed: number;
-  updatedDate: number;
-}
 
 const storage = new Storage()
 
@@ -29,35 +22,30 @@ const durationList =[
 
 const dataList = [
   {
-    id: 1,
     domain: '',
     duration: 1 * 60 * 60 * 1000,
     elapsed: 0,
     updatedDate: new Date().getTime()
   },
   {
-    id: 2,
     domain: '',
     duration: 1 * 60 * 60 * 1000,
     elapsed: 0,
     updatedDate: new Date().getTime()
   },
   {
-    id: 3,
     domain: '',
     duration: 1 * 60 * 60 * 1000,
     elapsed: 0,
     updatedDate: new Date().getTime()
   },
   {
-    id: 4,
     domain: '',
     duration: 1 * 60 * 60 * 1000,
     elapsed: 0,
     updatedDate: new Date().getTime()
   },
   {
-    id: 5,
     domain: '',
     duration: 1 * 60 * 60 * 1000,
     elapsed: 0,
@@ -86,12 +74,12 @@ const Domain = ({
 }
 
 function Options() {
+  const id = useId()
   const [snackbar, setSnackbar] = useState<{
     show: boolean;
     text: string;
     type: 'info' | 'error';
   } | null>(null);
-
   const [data, dataSet] = useState(dataList)
 
   useEffect(() => {
@@ -99,49 +87,55 @@ function Options() {
       const data: Data[] = await storage.get(STORAGE_LABEL)
 
       if (data) {
+        const setDataList = []
+
+        for (let i = 0; i < dataList.length; i++) {
+          if (data[i]) {
+            setDataList.push(data[i])
+          } else {
+            setDataList.push(dataList[i])
+          }
+        }
+
         dataSet(data)
       }
+
     }
 
     getData()
   }, [])
 
-  const onChange = (value: {
-    id: number;
-    domain: string;
-    duration: number;
+  const onChange = ({
+    index,
+    domain,
+    duration
+  }: {
+    index: number;
+    domain: Data['domain'];
+    duration: Data['duration'];
   }) => {
-    const nextData = data.map(v => v.id === value.id ? { ...v,
-      domain: value.domain,
-      duration: value.duration,
-      elapsed: v.elapsed,
-      updatedDate: v.updatedDate
+    const nextData = data.map((v, i) => i === index ? { ...v,
+      domain: domain,
+      duration: duration
     } : v)
 
     dataSet(nextData)
   }
 
-  const onSave = async (value: {
-    id: number;
-    domain: string;
-    duration: number;
-  }) => {
-    if (!value.domain.trim()) {
-      setSnackbar({
-        show: true,
-        text: 'Please enter a domain.',
-        type: 'error'
-      })
-      return
+  const onSave = async () => {
+    for (const v of data) {
+      if (v.domain.trim() === '') continue
+      if (!v.domain.trim()) {
+        setSnackbar({
+          show: true,
+          text: 'Please enter a domain.',
+          type: 'error'
+        })
+        return
+      }
     }
-    const nextData = data.map(v => v.id === value.id ? { ...v,
-      domain: value.domain,
-      duration: value.duration,
-      elapsed: v.elapsed,
-      updatedDate: v.updatedDate
-    } : v)
 
-    await storage.set(STORAGE_LABEL, nextData)
+    await storage.set(STORAGE_LABEL, data.filter(v => v.domain.trim() !== ''))
 
     setSnackbar({
       show: true,
@@ -153,14 +147,14 @@ function Options() {
   return (
     <div className="grid justify-center">
       <div className="grid gap-3 w-[30rem] mt-4 p-3 rounded-md border border-gray-400 text-gray-600 text-sm">
-        {data.map(v => {
+        {data.map((v, i) => {
           return (
-            <div key={v.id} className="flex items-center gap-2">
+            <div key={`${id}${i}`} className="flex items-center gap-2">
               <Domain
                 placeholder="domain.net"
                 value={v.domain}
-                onChange={(value) => onChange({
-                  id: v.id,
+                onChange={value => onChange({
+                  index: i,
                   domain: value,
                   duration: v.duration
                 })}
@@ -169,22 +163,22 @@ function Options() {
                 <Select
                   options={durationList}
                   selected={v.duration}
-                  onChange={(value) => onChange({
-                    id: v.id,
+                  onChange={value => onChange({
+                    index: i,
                     domain: v.domain,
                     duration: parseInt(value.target.value)
                   })}
                 />
               </div>
-              <button
-                className="p-1 rounded-md border border-gray-400 text-gray-600 text-sm"
-                onClick={() => onSave(v)}
-              >
-                SAVE
-              </button>
             </div>
           )
         })}
+        <button
+          className="p-1 rounded-md border border-gray-400 text-gray-600 text-sm"
+          onClick={() => onSave()}
+        >
+          SAVE
+        </button>
       </div>
       {snackbar && snackbar.show && (
         <Snackbar
