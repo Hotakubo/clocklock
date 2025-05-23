@@ -99,7 +99,6 @@ function Options() {
 
         dataSet(setDataList)
       }
-
     }
 
     getData()
