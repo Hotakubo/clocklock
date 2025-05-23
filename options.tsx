@@ -9,47 +9,59 @@ type Data = {
   id: number;
   domain: string;
   duration: number;
+  elapsed: number;
+  updatedDate: number;
 }
 
 const storage = new Storage()
 
 const durationList =[
-  { value: 5 * 60 * 1000, name: '5 minutes' },
-  { value: 10 * 60 * 1000, name: '10 minutes' },
-  { value: 30 * 60 * 1000, name: '30 minutes' },
-  { value: 1 * 60 * 60 * 1000, name: '1 hour' },
-  { value: 2 * 60 * 60 * 1000, name: '2 hours' },
-  { value: 3 * 60 * 60 * 1000, name: '3 hours' },
-  { value: 4 * 60 * 60 * 1000, name: '4 hours' },
-  { value: 5 * 60 * 60 * 1000, name: '5 hours' },
-  { value: 6 * 60 * 60 * 1000, name: '6 hours' }
+  { name: '5 minutes', value: 5 * 60 * 1000 },
+  { name: '10 minutes', value: 10 * 60 * 1000 },
+  { name: '30 minutes', value: 30 * 60 * 1000 },
+  { name: '1 hour', value: 1 * 60 * 60 * 1000 },
+  { name: '2 hours', value: 2 * 60 * 60 * 1000 },
+  { name: '3 hours', value: 3 * 60 * 60 * 1000 },
+  { name: '4 hours', value: 4 * 60 * 60 * 1000 },
+  { name: '5 hours', value: 5 * 60 * 60 * 1000 },
+  { name: '6 hours', value: 6 * 60 * 60 * 1000 }
 ]
 
 const dataList = [
   {
     id: 1,
     domain: '',
-    duration: 1 * 60 * 60 * 1000
+    duration: 1 * 60 * 60 * 1000,
+    elapsed: 0,
+    updatedDate: new Date().getTime()
   },
   {
     id: 2,
     domain: '',
-    duration: 1 * 60 * 60 * 1000
+    duration: 1 * 60 * 60 * 1000,
+    elapsed: 0,
+    updatedDate: new Date().getTime()
   },
   {
     id: 3,
     domain: '',
-    duration: 1 * 60 * 60 * 1000
+    duration: 1 * 60 * 60 * 1000,
+    elapsed: 0,
+    updatedDate: new Date().getTime()
   },
   {
     id: 4,
     domain: '',
-    duration: 1 * 60 * 60 * 1000
+    duration: 1 * 60 * 60 * 1000,
+    elapsed: 0,
+    updatedDate: new Date().getTime()
   },
   {
     id: 5,
     domain: '',
-    duration: 1 * 60 * 60 * 1000
+    duration: 1 * 60 * 60 * 1000,
+    elapsed: 0,
+    updatedDate: new Date().getTime()
   }
 ]
 
@@ -94,14 +106,16 @@ function Options() {
     getData()
   }, [])
 
-  const onChange = (newData: {
+  const onChange = (value: {
     id: number;
     domain: string;
     duration: number;
   }) => {
-    const nextData = data.map(v => v.id === newData.id ? { ...v,
-      domain: newData.domain,
-      duration: newData.duration
+    const nextData = data.map(v => v.id === value.id ? { ...v,
+      domain: value.domain,
+      duration: value.duration,
+      elapsed: v.elapsed,
+      updatedDate: v.updatedDate
     } : v)
 
     dataSet(nextData)
@@ -120,8 +134,14 @@ function Options() {
       })
       return
     }
+    const nextData = data.map(v => v.id === value.id ? { ...v,
+      domain: value.domain,
+      duration: value.duration,
+      elapsed: v.elapsed,
+      updatedDate: v.updatedDate
+    } : v)
 
-    await storage.set(STORAGE_LABEL, data)
+    await storage.set(STORAGE_LABEL, nextData)
 
     setSnackbar({
       show: true,
