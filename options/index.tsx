@@ -148,7 +148,7 @@ function Options() {
       v.elapsed = 0
     }
 
-    await storage.set(STORAGE_LABEL, data)
+    await storage.set(STORAGE_LABEL, data.filter(v => v.domain.trim() !== ''))
 
     setSnackbar({
       show: true,

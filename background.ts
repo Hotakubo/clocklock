@@ -29,7 +29,7 @@ const checkOpenTabs = async () => {
       console.log('OVER DURATION')
     }
   }
-  data.map(v => console.log(`${v.domain}: elapsed: ${v.elapsed}, duration: ${v.duration}, ${v.updatedDate}`))
+  data.map(v => console.log(`${v.domain}: elapsed: ${v.elapsed}, duration: ${v.duration}`))
 
   await storage.set(STORAGE_LABEL, data)
 }
