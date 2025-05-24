@@ -1,7 +1,6 @@
 import type { PlasmoCSConfig } from 'plasmo'
 import { sendToBackground } from "@plasmohq/messaging"
-import { logger } from '../shared/logger'
-import { DELAY } from '../shared/constants'
+import { DELAY } from '~/shared/constants'
 
 export const config: PlasmoCSConfig = {
   matches: ["<all_urls>"]
