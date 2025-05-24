@@ -143,8 +143,22 @@ function Options() {
     })
   }
 
+  const onReset = async () => {
+    for (const v of data) {
+      v.elapsed = 0
+    }
+
+    await storage.set(STORAGE_LABEL, data)
+
+    setSnackbar({
+      show: true,
+      text: 'Reset successfully.',
+      type: 'info'
+    })
+  }
+
   return (
-    <div className="grid justify-center">
+    <div className="grid gap-3 justify-center">
       <div className="grid gap-3 w-[30rem] mt-4 p-3 rounded-md border border-gray-400 text-gray-600 text-sm">
         {data.map((v, i) => {
           return (
@@ -172,13 +186,19 @@ function Options() {
             </div>
           )
         })}
-        <button
-          className="p-1 rounded-md border border-gray-400 text-gray-600 text-sm"
-          onClick={() => onSave()}
-        >
-          SAVE
-        </button>
       </div>
+      <button
+        className="p-1 rounded-md border border-gray-400 text-gray-600 text-sm active:bg-gray-200"
+        onClick={() => onReset()}
+      >
+        RESET
+      </button>
+      <button
+        className="p-1 rounded-md border border-gray-400 text-gray-600 text-sm active:bg-gray-200"
+        onClick={() => onSave()}
+      >
+        SAVE
+      </button>
       {snackbar && snackbar.show && (
         <Snackbar
           text={snackbar.text}
