@@ -2,7 +2,7 @@
 
 Stop wasting time against your will.
 
-# Overview
+## Overview
 
 This is a Google Chrome extension.
 
