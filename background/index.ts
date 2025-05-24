@@ -20,7 +20,6 @@ const checkOpenTabs = async () => {
 
   for (const v of data) {
     if (v.elapsed >= v.duration) {
-      logger.info('OVER DURATION')
     } else {
       v.elapsed = v.elapsed + DELAY
     }
