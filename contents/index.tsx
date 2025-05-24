@@ -53,7 +53,7 @@ const Cover = () => {
           alignItems: "center",
           padding: "8px",
           borderRadius: "12px",
-          background: "rgba(255, 192, 203, 0.9)",
+          background: "rgba(200, 200, 200, 0.9)",
           backdropFilter: "blur(5px)"
         }}
       >
