@@ -1,10 +1,10 @@
 # ClockLock
 
-Stop wasting time against your will.
-
-## Overview
-
 This is a Google Chrome extension.
+
+Limit the time spent on websites to reduce unwanted time and focus on what truly matters.
+
+You can always disable this extension or find ways around it, but even a slight inconvenience is enough to make you lose interest.
 
 ## Features
 
