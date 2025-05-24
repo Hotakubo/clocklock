@@ -9,7 +9,6 @@ This is a Google Chrome extension.
 ## Features
 
 - You can limit the browsing time for specific domains
-- Tabs playing audio are also counted as being browsed
 - The timer resets when the date changes
 
 ## How to Use
