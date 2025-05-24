@@ -20,8 +20,6 @@ const checkElapsed = async () => {
       domain: _currentHostname()
     }
   })
-
-  logger.info(res)
 }
 
 setInterval(() => checkElapsed(), DELAY)
