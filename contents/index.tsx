@@ -14,7 +14,7 @@ const _currentHostname = (): string => {
 }
 
 const Cover = () => {
-  const [isElapsed, isElapsedSet] = useState<boolean | null>(null)
+  const [isElapsed, isElapsedSet] = useState<boolean>(false)
 
   useEffect(() => {
     const checkElapsed = async () => {
