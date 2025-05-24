@@ -134,6 +134,18 @@ function Options() {
       }
     }
 
+    const domains = data.map(v => v.domain.trim()).filter(domain => domain !== '')
+    const uniqueDomains = new Set(domains)
+
+    if (domains.length !== uniqueDomains.size) {
+      setSnackbar({
+        show: true,
+        text: 'Duplicate domains are not allowed.',
+        type: 'error'
+      })
+      return
+    }
+
     await storage.set(STORAGE_LABEL, data.filter(v => v.domain.trim() !== ''))
 
     setSnackbar({
