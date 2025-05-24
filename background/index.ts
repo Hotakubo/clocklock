@@ -1,6 +1,7 @@
-import type { Data } from './shared/types'
+import type { Data } from '../shared/types'
 import { Storage } from '@plasmohq/storage'
-import { STORAGE_LABEL, DELAY } from './shared/constants'
+import { STORAGE_LABEL, DELAY } from '../shared/constants'
+import { logger } from '../shared/logger'
 
 const storage = new Storage()
 
@@ -19,7 +20,7 @@ const checkOpenTabs = async () => {
 
   for (const v of data) {
     if (v.elapsed >= v.duration) {
-      console.log('OVER DURATION')
+      logger.info('OVER DURATION')
     } else {
       v.elapsed = v.elapsed + DELAY
     }
@@ -29,7 +30,7 @@ const checkOpenTabs = async () => {
       v.updatedDate = new Date().getTime()
     }
   }
-  data.map(v => console.log(`${v.domain}: elapsed: ${v.elapsed}, duration: ${v.duration}`))
+  data.map(v => logger.info(`${v.domain}: elapsed: ${v.elapsed}, duration: ${v.duration}`))
 
   await storage.set(STORAGE_LABEL, data)
 }

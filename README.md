@@ -19,11 +19,6 @@ This is a Google Chrome extension.
 2. Enter the browsing time allowed per day
     - You can select from 5 minutes to a maximum of 6 hours
 
-## Structure
-
-- options.tsx
-    - Input domains and time limits and save them
-
 # CLI
 
 - `npm create plasmo`
