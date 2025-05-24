@@ -1,5 +1,4 @@
 import type { PlasmoCSConfig } from 'plasmo'
-import { createRoot } from 'react-dom/client'
 import { sendToBackground } from "@plasmohq/messaging"
 import { DELAY } from '~/shared/constants'
 
