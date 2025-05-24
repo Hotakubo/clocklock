@@ -28,6 +28,7 @@ const Cover = () => {
       isElapsedSet(res.isElapsed)
     }
 
+    checkElapsed()
     setInterval(() => checkElapsed(), DELAY)
   }, [])
 
