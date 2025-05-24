@@ -1,4 +1,5 @@
 import type { PlasmoCSConfig } from 'plasmo'
+import { createRoot } from 'react-dom/client'
 import { sendToBackground } from "@plasmohq/messaging"
 import { DELAY } from '~/shared/constants'
 
@@ -23,6 +24,33 @@ const checkElapsed = async () => {
 
 setInterval(() => checkElapsed(), DELAY)
 
-export default function Contents() {
-  return <div style={{ background: "black" }}></div>
+const Cover = () => {
+  return (
+    <div
+      style={{
+        width: "100vw",
+        height: "100vh",
+        display: "grid",
+        justifyItems: "center",
+        alignItems: "center"
+      }}
+    >
+      <div
+        style={{
+          width: "95%",
+          height: "95%",
+          display: "grid",
+          justifyItems: "center",
+          alignItems: "center",
+          padding: "8px",
+          borderRadius: "12px",
+          background: "rgba(255, 192, 203, 0.9)",
+          backdropFilter: "blur(5px)"
+        }}
+      >
+      </div>
+    </div>
+  )
 }
+
+export default Cover
