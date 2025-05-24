@@ -189,15 +189,15 @@ function Options() {
       </div>
       <button
         className="p-1 rounded-md border border-gray-400 text-gray-600 text-sm active:bg-gray-200"
-        onClick={() => onReset()}
-      >
-        RESET
-      </button>
-      <button
-        className="p-1 rounded-md border border-gray-400 text-gray-600 text-sm active:bg-gray-200"
         onClick={() => onSave()}
       >
         SAVE
+      </button>
+      <button
+        className="w-24 p-1 rounded-md border border-gray-400 text-gray-600 text-sm active:bg-gray-200"
+        onClick={() => onReset()}
+      >
+        RESET
       </button>
       {snackbar && snackbar.show && (
         <Snackbar

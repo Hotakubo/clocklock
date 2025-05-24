@@ -18,15 +18,15 @@ const checkOpenTabs = async () => {
   const data: Data[] = await storage.get(STORAGE_LABEL)
 
   for (const v of data) {
-    v.elapsed = v.elapsed + DELAY
+    if (v.elapsed >= v.duration) {
+      console.log('OVER DURATION')
+    } else {
+      v.elapsed = v.elapsed + DELAY
+    }
 
     if (_isUpdateDateBefore({ updatedDate: v.updatedDate })) {
       v.elapsed = 0
       v.updatedDate = new Date().getTime()
-    }
-
-    if (v.elapsed >= v.duration) {
-      console.log('OVER DURATION')
     }
   }
   data.map(v => console.log(`${v.domain}: elapsed: ${v.elapsed}, duration: ${v.duration}`))
