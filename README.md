@@ -18,6 +18,8 @@ You can always disable this extension or find ways around it, but even a slight 
 2. Enter the browsing time allowed per day
     - You can select from 5 minutes to a maximum of 6 hours
 
+## Structure
+
 - `options/index.tsx`
 - `contents/index.tsx`
     - Components to display on the page you want to restrict
