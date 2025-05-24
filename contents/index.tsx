@@ -1,4 +1,5 @@
 import type { PlasmoCSConfig } from 'plasmo'
+import { useState, useEffect } from 'react'
 import { sendToBackground } from "@plasmohq/messaging"
 import { DELAY } from '~/shared/constants'
 
@@ -12,18 +13,26 @@ const _currentHostname = (): string => {
   return hostname
 }
 
-const checkElapsed = async () => {
-  const res = await sendToBackground({
-    name: 'ping',
-    body: {
-      domain: _currentHostname()
-    }
-  })
-}
-
-setInterval(() => checkElapsed(), DELAY)
-
 const Cover = () => {
+  const [isElapsed, isElapsedSet] = useState<boolean | null>(null)
+
+  useEffect(() => {
+    const checkElapsed = async () => {
+      const res = await sendToBackground({
+        name: 'ping',
+        body: {
+          domain: _currentHostname()
+        }
+      })
+
+      isElapsedSet(res.isElapsed)
+    }
+
+    setInterval(() => checkElapsed(), DELAY)
+  }, [])
+
+  if (!isElapsed) return <></>
+
   return (
     <div
       style={{
