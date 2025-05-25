@@ -33,7 +33,7 @@
     "permissions": [
       "tabs",
       "storage",
-      "notifications"
+      "scripting"
     ]
   }
 }
