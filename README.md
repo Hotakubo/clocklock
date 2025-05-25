@@ -1,16 +1,15 @@
 # ClockLock
 
-Stop wasting time against your will.
-
-# Overview
-
 This is a Google Chrome extension.
+
+Limit the time spent on websites to reduce unwanted time and focus on what truly matters.
+
+You can always disable this extension or find ways around it, but even a slight inconvenience is enough to make you lose interest.
 
 ## Features
 
 - You can limit the browsing time for specific domains
-- Tabs playing audio are also counted as being browsed
-- The count resets at 11:59 PM
+- The timer resets when the date changes
 
 ## How to Use
 
@@ -19,6 +18,15 @@ This is a Google Chrome extension.
 2. Enter the browsing time allowed per day
     - You can select from 5 minutes to a maximum of 6 hours
 
-# CLI
+## Structure
 
-- `npm create plasmo`
+- `options/index.tsx`
+    - Browser Extension Pages
+- `contents/index.tsx`
+    - Components to display on the page you want to restrict
+    - `checkOpenTabs` method is the main process
+- `background`
+    - `/index.ts`
+        - Measure tab usage time and save it in storage
+    - `/messages/ping.ts`
+        - Respond with a boolean value if the time limit is exceeded

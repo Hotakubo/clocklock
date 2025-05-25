@@ -14,7 +14,7 @@ const _currentHostname = (): string => {
 }
 
 const Cover = () => {
-  const [isElapsed, isElapsedSet] = useState<boolean | null>(null)
+  const [isElapsed, isElapsedSet] = useState<boolean>(false)
 
   useEffect(() => {
     const checkElapsed = async () => {
@@ -28,6 +28,7 @@ const Cover = () => {
       isElapsedSet(res.isElapsed)
     }
 
+    checkElapsed()
     setInterval(() => checkElapsed(), DELAY)
   }, [])
 
@@ -52,7 +53,7 @@ const Cover = () => {
           alignItems: "center",
           padding: "8px",
           borderRadius: "12px",
-          background: "rgba(255, 192, 203, 0.9)",
+          background: "rgba(200, 200, 200, 0.9)",
           backdropFilter: "blur(5px)"
         }}
       >

@@ -123,7 +123,6 @@ function Options() {
 
   const onSave = async () => {
     for (const v of data) {
-      if (v.domain.trim() === '') continue
       if (!v.domain.trim()) {
         setSnackbar({
           show: true,
@@ -134,7 +133,7 @@ function Options() {
       }
     }
 
-    const domains = data.map(v => v.domain.trim()).filter(domain => domain !== '')
+    const domains = data.map(v => v.domain.trim()).filter(v => v !== '')
     const uniqueDomains = new Set(domains)
 
     if (domains.length !== uniqueDomains.size) {

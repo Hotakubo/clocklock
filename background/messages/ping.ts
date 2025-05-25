@@ -17,7 +17,7 @@ const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
   }
 
   res.send({
-    isElapsed: null
+    isElapsed: false
   })
 }
 
