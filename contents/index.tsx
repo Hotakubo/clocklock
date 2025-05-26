@@ -4,7 +4,10 @@ import { sendToBackground } from "@plasmohq/messaging"
 import { DELAY } from '~/shared/constants'
 
 export const config: PlasmoCSConfig = {
-  matches: ["<all_urls>"]
+  matches: [
+    'https://*/*',
+    'http://*/*'
+  ]
 }
 
 const _currentHostname = (): string => {

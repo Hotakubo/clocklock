@@ -1,4 +1,5 @@
 import type { Data } from '~/shared/types'
+import { z } from 'zod'
 import { useState, useEffect, useId } from 'react'
 import { Storage } from '@plasmohq/storage'
 import Select from '~/parts/Select'
@@ -122,11 +123,28 @@ function Options() {
   }
 
   const onSave = async () => {
+    const domainSchema = z.string().regex(
+      /^(?!:\/\/)([a-zA-Z0-9-_]+\.)+[a-zA-Z]{2,}$/,
+      'Invalid domain format'
+    )
+
     for (const v of data) {
+      if (v.domain.trim() === '') continue
       if (!v.domain.trim()) {
         setSnackbar({
           show: true,
           text: 'Please enter a domain.',
+          type: 'error'
+        })
+        return
+      }
+
+      try {
+        domainSchema.parse(v.domain.trim())
+      } catch (error) {
+        setSnackbar({
+          show: true,
+          text: error.errors[0].message,
           type: 'error'
         })
         return
