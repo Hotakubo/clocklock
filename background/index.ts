@@ -17,6 +17,9 @@ const _isUpdateDateBefore = ({ updatedDate }: { updatedDate: Data['updatedDate']
 
 const checkOpenTabs = async () => {
   const data: Data[] = await storage.get(STORAGE_LABEL)
+  const tabs = await chrome.tabs.query({
+    currentWindow: false
+  })
 
   for (const v of data) {
     if (v.elapsed <= v.duration) {
