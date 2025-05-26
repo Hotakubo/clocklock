@@ -20,9 +20,10 @@ const checkOpenTabs = async () => {
   const tabs = await chrome.tabs.query({
     currentWindow: false
   })
+  const openDomains = tabs.map(v => new URL(v.url).hostname)
 
   for (const v of data) {
-    if (v.elapsed <= v.duration) {
+    if (openDomains.includes(v.domain) && v.elapsed <= v.duration) {
       v.elapsed = v.elapsed + DELAY
     }
 
