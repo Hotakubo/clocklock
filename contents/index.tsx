@@ -54,7 +54,6 @@ const Cover = () => {
           display: "grid",
           justifyItems: "center",
           alignItems: "center",
-          padding: "8px",
           borderRadius: "12px",
           background: "rgba(200, 200, 200, 0.9)",
           backdropFilter: "blur(5px)"
