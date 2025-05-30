@@ -82,12 +82,15 @@ function Options() {
     type: 'info' | 'error';
   } | null>(null);
   const [data, dataSet] = useState(dataList)
+  const [loadedData, loadedDataSet] = useState(dataList)
 
   useEffect(() => {
     const getData = async () => {
       const data: Data[] = await storage.get(STORAGE_LABEL)
 
       if (data) {
+        loadedDataSet(structuredClone(data))
+
         const setDataList = []
 
         for (let i = 0; i < dataList.length; i++) {
@@ -129,8 +132,10 @@ function Options() {
     )
 
     for (const v of data) {
-      if (v.domain.trim() === '') continue
-      if (!v.domain.trim()) {
+      v.domain = v.domain.trim()
+
+      if (v.domain === '') continue
+      if (!v.domain) {
         setSnackbar({
           show: true,
           text: 'Please enter a domain.',
@@ -140,7 +145,11 @@ function Options() {
       }
 
       try {
-        domainSchema.parse(v.domain.trim())
+        domainSchema.parse(v.domain)
+
+        if (!loadedData.map(h => h.domain).includes(v.domain)) {
+          v.elapsed = 0
+        }
       } catch (error) {
         setSnackbar({
           show: true,
@@ -151,7 +160,7 @@ function Options() {
       }
     }
 
-    const domains = data.map(v => v.domain.trim()).filter(v => v !== '')
+    const domains = data.map(v => v.domain).filter(v => v !== '')
     const uniqueDomains = new Set(domains)
 
     if (domains.length !== uniqueDomains.size) {
