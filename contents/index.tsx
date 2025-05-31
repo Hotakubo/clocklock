@@ -18,8 +18,14 @@ const _currentHostname = (): string => {
 
 const Cover = () => {
   const [isElapsed, isElapsedSet] = useState<boolean>(false)
+  const [width, widthSet] = useState<number>(document.documentElement.clientWidth)
+  const [height, heightSet] = useState<number>(document.documentElement.scrollHeight)
 
   useEffect(() => {
+    const handleResize = () => {
+      widthSet(document.documentElement.clientWidth)
+      heightSet(document.documentElement.scrollHeight)
+    }
     const checkElapsed = async () => {
       const res = await sendToBackground({
         name: 'ping',
@@ -32,7 +38,14 @@ const Cover = () => {
     }
 
     checkElapsed()
+
     setInterval(() => checkElapsed(), DELAY)
+
+    window.addEventListener('resize', handleResize)
+
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
   }, [])
 
   if (!isElapsed) return <></>
@@ -40,8 +53,8 @@ const Cover = () => {
   return (
     <div
       style={{
-        width: "100vw",
-        height: "100vh",
+        width: `${width}px`,
+        height: `${height}px`,
         display: "grid",
         justifyItems: "center",
         alignItems: "center"
@@ -49,12 +62,11 @@ const Cover = () => {
     >
       <div
         style={{
-          width: "95%",
-          height: "95%",
+          width: "100%",
+          height: "100%",
           display: "grid",
           justifyItems: "center",
           alignItems: "center",
-          borderRadius: "12px",
           background: "rgba(200, 200, 200, 0.9)",
           backdropFilter: "blur(5px)"
         }}
