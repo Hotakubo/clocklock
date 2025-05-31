@@ -26,6 +26,9 @@ const Cover = () => {
       widthSet(document.documentElement.clientWidth)
       heightSet(document.documentElement.scrollHeight)
     }
+    const handleScroll = () => {
+      heightSet(document.documentElement.scrollHeight)
+    }
     const checkElapsed = async () => {
       const res = await sendToBackground({
         name: 'ping',
@@ -42,9 +45,11 @@ const Cover = () => {
     setInterval(() => checkElapsed(), DELAY)
 
     window.addEventListener('resize', handleResize)
+    window.addEventListener('scroll', handleScroll)
 
     return () => {
       window.removeEventListener('resize', handleResize)
+      window.removeEventListener('scroll', handleScroll)
     }
   }, [])
 
