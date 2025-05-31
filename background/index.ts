@@ -30,7 +30,7 @@ const checkOpenTabs = async () => {
       v.updatedDate = new Date().getTime()
     }
   }
-  data.map(v => logger.info(`domain: ${v.domain}, elapsed: ${v.elapsed}, duration: ${v.duration}`))
+  logger.info(`Check\n${data.map(v => `domain: ${v.domain}\nelapsed: ${v.elapsed}\nduration: ${v.duration}`).join('\n\n')}`)
 
   await storage.set(STORAGE_LABEL, data)
 }
