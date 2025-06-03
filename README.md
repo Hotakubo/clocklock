@@ -30,3 +30,7 @@ You can always disable this extension or find ways around it, but even a slight 
         - Measure tab usage time and save it in storage
     - `/messages/ping.ts`
         - Respond with a boolean value if the time limit is exceeded
+
+## Shell
+
+- `npm run build -- --zip`
