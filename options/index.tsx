@@ -181,7 +181,11 @@ function Options() {
       return
     }
 
-    await storage.set(STORAGE_LABEL, data.filter(v => v.domain.trim() !== ''))
+    const parseData = data.filter(v => v.domain.trim() !== '')
+
+    await storage.set(STORAGE_LABEL, parseData)
+
+    loadedDataSet(structuredClone(parseData))
 
     setSnackbar({
       show: true,
