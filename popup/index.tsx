@@ -17,10 +17,10 @@ const Popup = () => {
         dataSet(storedData)
       }
     }
-
     fetchData()
 
     const interval = setInterval(fetchData, DELAY)
+
     return () => clearInterval(interval)
   }, [])
 
