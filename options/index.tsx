@@ -8,6 +8,11 @@ import Snackbar from '~/parts/Snackbar'
 import { STORAGE_LABEL } from '~/shared/constants'
 import '~/shared/style.css'
 
+const domainSchema = z.string().regex(
+  /^(?!:\/\/)([a-zA-Z0-9-_]+\.)+[a-zA-Z]{2,}$/,
+  'Invalid domain format'
+)
+
 const storage = new Storage()
 
 const durationList =[
@@ -135,37 +140,28 @@ function Options() {
   }
 
   const onSave = async () => {
-    const domainSchema = z.string().regex(
-      /^(?!:\/\/)([a-zA-Z0-9-_]+\.)+[a-zA-Z]{2,}$/,
-      'Invalid domain format'
-    )
+    const currentData: Data[] = await storage.get(STORAGE_LABEL)
 
     for (const v of data) {
       v.domain = v.domain.trim()
 
       if (v.domain === '') continue
-      if (!v.domain) {
+      if (domainSchema.safeParse(v.domain).success === false) {
         setSnackbar({
           show: true,
-          text: 'Please enter a domain.',
+          text: 'Invalid domain format.',
           type: 'error'
         })
-        return
       }
 
-      try {
-        domainSchema.parse(v.domain)
+      if (loadedData.map(h => h.domain).includes(v.domain)) {
+        const oneData = currentData.find(h => h.domain === v.domain)
 
-        if (!loadedData.map(h => h.domain).includes(v.domain)) {
-          v.elapsed = 0
+        if (oneData) {
+          v.elapsed = oneData.elapsed
         }
-      } catch (error) {
-        setSnackbar({
-          show: true,
-          text: error.errors[0].message,
-          type: 'error'
-        })
-        return
+      } else{
+        v.elapsed = 0
       }
     }
 
