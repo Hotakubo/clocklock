@@ -7,10 +7,16 @@ import '~/shared/style.css'
 
 const storage = new Storage()
 
-const _parseElapsed = ({ elapsed }: { elapsed: number }): string => {
+const _parseElapsed = ({
+  startDuration,
+  elapsed
+ }: {
+  startDuration: Data['duration'];
+  elapsed: Data['elapsed'];
+}): string => {
   const duration = intervalToDuration({
-    start: 0,
-    end: elapsed
+    start: startDuration,
+    end: startDuration + elapsed
   })
   const hours = duration.hours ? String(duration.hours).padStart(2, '0') : '00'
   const minutes = duration.minutes ? String(duration.minutes).padStart(2, '0') : '00'
@@ -36,13 +42,20 @@ const Popup = () => {
     return () => clearInterval(interval)
   }, [])
 
+  if (data.length === 0) {
+    return <div className="w-40 p-4">No data available</div>
+  }
+
   return (
     <div className="p-4">
       <ul className="list-none">
         {data.map((v, index) => (
-          <li key={index} className="flex gap-1">
+          <li key={index} className="flex gap-1 text-lg">
             <div>{v.domain}</div>
-            <div>{_parseElapsed({ elapsed: v.elapsed })}</div>
+            <div>{_parseElapsed({
+              startDuration: v.duration,
+              elapsed: v.elapsed
+            })}</div>
           </li>
         ))}
       </ul>
