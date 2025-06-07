@@ -12,9 +12,9 @@ const _parseElapsed = ({ elapsed }: { elapsed: number }): string => {
     start: 0,
     end: elapsed
   })
-  const hours = duration.hours ? `${duration.hours}` : 0
-  const minutes = duration.minutes ? `${duration.minutes}` : 0
-  const seconds = duration.seconds ? `${duration.seconds}` : 0
+  const hours = duration.hours ? String(duration.hours).padStart(2, '0') : '00'
+  const minutes = duration.minutes ? String(duration.minutes).padStart(2, '0') : '00'
+  const seconds = duration.seconds ? String(duration.seconds).padStart(2, '0') : '00'
 
   return `${hours}:${minutes}:${seconds}`
 }
