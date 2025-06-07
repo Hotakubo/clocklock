@@ -3,6 +3,7 @@ import { z } from 'zod'
 import { useState, useEffect, useId } from 'react'
 import { Storage } from '@plasmohq/storage'
 import Select from '~/parts/Select'
+import Checkbox from '~/parts/Checkbox'
 import Snackbar from '~/parts/Snackbar'
 import { STORAGE_LABEL } from '~/shared/constants'
 import '~/shared/style.css'
@@ -24,30 +25,35 @@ const durationList =[
 const dataList = [
   {
     domain: '',
+    isSubdomainIncluded: false,
     duration: 1 * 60 * 60 * 1000,
     elapsed: 0,
     updatedDate: new Date().getTime()
   },
   {
     domain: '',
+    isSubdomainIncluded: false,
     duration: 1 * 60 * 60 * 1000,
     elapsed: 0,
     updatedDate: new Date().getTime()
   },
   {
     domain: '',
+    isSubdomainIncluded: false,
     duration: 1 * 60 * 60 * 1000,
     elapsed: 0,
     updatedDate: new Date().getTime()
   },
   {
     domain: '',
+    isSubdomainIncluded: false,
     duration: 1 * 60 * 60 * 1000,
     elapsed: 0,
     updatedDate: new Date().getTime()
   },
   {
     domain: '',
+    isSubdomainIncluded: false,
     duration: 1 * 60 * 60 * 1000,
     elapsed: 0,
     updatedDate: new Date().getTime()
@@ -111,15 +117,18 @@ function Options() {
   const onChange = ({
     index,
     domain,
+    isSubdomainIncluded,
     duration
   }: {
     index: number;
     domain: Data['domain'];
+    isSubdomainIncluded: Data['isSubdomainIncluded'];
     duration: Data['duration'];
   }) => {
     const nextData = data.map((v, i) => i === index ? { ...v,
-      domain: domain,
-      duration: duration
+      domain,
+      isSubdomainIncluded,
+      duration
     } : v)
 
     dataSet(nextData)
@@ -183,28 +192,44 @@ function Options() {
 
   return (
     <div className="grid gap-3 justify-center">
-      <div className="grid gap-3 w-[30rem] mt-4 text-gray-600 text-sm">
+      <div className="grid gap-4 w-[30rem] mt-4 text-gray-600 text-sm">
         {data.map((v, i) => {
           return (
-            <div key={`${id}${i}`} className="flex items-center gap-2 p-3 rounded-md border border-gray-400">
-              <Domain
-                placeholder="example.com"
-                value={v.domain}
-                onChange={value => onChange({
-                  index: i,
-                  domain: value,
-                  duration: v.duration
-                })}
-              />
-              <div className="w-[8rem] rounded-md border border-gray-400 text-gray-600">
+            <div key={`${id}${i}`} className="grid grid-cols-7 gap-2 p-3 rounded-md border border-gray-400">
+              <div className="col-span-5">
+                <Domain
+                  placeholder="example.com"
+                  value={v.domain}
+                  onChange={value => onChange({
+                    index: i,
+                    domain: value,
+                    isSubdomainIncluded: v.isSubdomainIncluded,
+                    duration: v.duration
+                  })}
+                />
+              </div>
+              <div className="col-span-2 rounded-md border border-gray-400 text-gray-600">
                 <Select
                   options={durationList}
                   selected={v.duration}
                   onChange={value => onChange({
                     index: i,
                     domain: v.domain,
+                    isSubdomainIncluded: v.isSubdomainIncluded,
                     duration: parseInt(value.target.value)
                   })}
+                />
+              </div>
+              <div className="col-span-7">
+                <Checkbox
+                  checked={v.isSubdomainIncluded}
+                  onChange={value => onChange({
+                    index: i,
+                    domain: v.domain,
+                    isSubdomainIncluded: value,
+                    duration: v.duration
+                  })}
+                  label="All sites ending in this domain will be affected."
                 />
               </div>
             </div>
