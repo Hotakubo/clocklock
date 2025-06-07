@@ -64,7 +64,7 @@ const Popup = () => {
     <div className="p-4">
       <ul className="list-none">
         {data.map((v, index) => (
-          <li key={index} className="flex gap-2 text-lg">
+          <li key={index} className="flex gap-4 justify-between text-lg">
             <div>{v.domain}</div>
             <div className={`${_durationStyle({ elapsed: v.elapsed, duration: v.duration })}`}>{_parseElapsed({
               startDuration: v.duration,
