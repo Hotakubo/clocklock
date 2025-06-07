@@ -140,6 +140,10 @@ function Options() {
   }
 
   const onSave = async () => {
+    const isDuplicateDomains = ({ domains }: { domains: Data['domain'][] }) => {
+      const uniqueDomains = new Set(domains)
+      return domains.length !== uniqueDomains.size
+    }
     const currentData: Data[] = await storage.get(STORAGE_LABEL)
 
     for (const v of data) {
@@ -165,10 +169,7 @@ function Options() {
       }
     }
 
-    const domains = data.map(v => v.domain).filter(v => v !== '')
-    const uniqueDomains = new Set(domains)
-
-    if (domains.length !== uniqueDomains.size) {
+    if (isDuplicateDomains({ domains: data.map(v => v.domain).filter(v => v !== '') })) {
       setSnackbar({
         show: true,
         text: 'Duplicate domains are not allowed.',
