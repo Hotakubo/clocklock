@@ -1,7 +1,6 @@
 import type { Data } from '~/shared/types'
 import { Storage } from '@plasmohq/storage'
 import { STORAGE_LABEL, DELAY } from '~/shared/constants'
-import { logger } from '~/shared/logger'
 
 const storage = new Storage()
 
@@ -51,7 +50,6 @@ const checkOpenTabs = async () => {
       v.updatedDate = new Date().getTime()
     }
   }
-  logger.info(`Check\n${data.map(v => `domain: ${v.domain}\nduration: ${v.duration}\nelapsed: ${v.elapsed}`).join('\n\n')}`)
 
   await storage.set(STORAGE_LABEL, data)
 }

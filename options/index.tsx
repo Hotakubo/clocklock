@@ -88,7 +88,7 @@ function Options() {
     type: 'info' | 'error';
   } | null>(null);
   const [data, dataSet] = useState(dataList)
-  const [loadedData, loadedDataSet] = useState(dataList)
+  const [loadedData, loadedDataSet] = useState([])
 
   useEffect(() => {
     const getData = async () => {
@@ -181,11 +181,10 @@ function Options() {
       return
     }
 
-    const existingData = data.filter(v => v.domain.trim() !== '')
+    await storage.set(STORAGE_LABEL, data.filter(v => v.domain !== ''))
 
-    await storage.set(STORAGE_LABEL, existingData)
-
-    loadedDataSet(structuredClone(existingData))
+    dataSet(data)
+    loadedDataSet(structuredClone(data.filter(v => v.domain !== '')))
 
     setSnackbar({
       show: true,
