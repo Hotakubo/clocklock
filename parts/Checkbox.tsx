@@ -8,7 +8,7 @@ type CheckboxProps = {
 
 const Checkbox: React.FC<CheckboxProps> = ({ checked, onChange, label }) => {
   return (
-    <label className="flex items-center space-x-2 cursor-pointer">
+    <label className="flex max-w-fit items-center space-x-2 cursor-pointer">
       <input
         type="checkbox"
         checked={checked}
