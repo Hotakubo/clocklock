@@ -73,7 +73,7 @@ const Cover = () => {
           justifyItems: "center",
           alignItems: "center",
           background: "rgba(200, 200, 200, 0.9)",
-          backdropFilter: "blur(5px)"
+          backdropFilter: "blur(10px)"
         }}
       >
       </div>

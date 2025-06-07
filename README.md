@@ -15,6 +15,7 @@ You can always disable this extension or find ways around it, but even a slight 
 
 1. Enter the domains you want to restrict
     - Maximum of 5 domains
+    - You can specify subdomains using an asterisk in the domain
 2. Enter the browsing time allowed per day
     - You can select from 5 minutes to a maximum of 6 hours
 
