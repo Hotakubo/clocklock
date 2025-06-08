@@ -67,6 +67,34 @@ const DATA_LIST = [
   }
 ]
 
+const _isDuplicateDomains = ({ domains }: { domains: Data['domain'][] }) => {
+  const uniqueDomains = new Set(domains)
+  return domains.length !== uniqueDomains.size
+}
+
+const _check = ({
+  data
+}: {
+  data: {
+    domain: Data['domain'];
+  }[]
+}) => {
+  for (const v of data) {
+    v.domain = v.domain.trim()
+
+    if (v.domain === '') continue
+    if (schema.domain.safeParse(v.domain).success === false) {
+      return 'Invalid domain format.'
+    }
+  }
+
+  if (_isDuplicateDomains({ domains: data.map(v => v.domain).filter(v => v !== '') })) {
+    return 'Duplicate domains are not allowed.'
+  }
+
+  return null
+}
+
 const Domain = ({
   value,
   onChange,
@@ -142,24 +170,19 @@ function Options() {
   }
 
   const onSave = async () => {
-    const isDuplicateDomains = ({ domains }: { domains: Data['domain'][] }) => {
-      const uniqueDomains = new Set(domains)
-      return domains.length !== uniqueDomains.size
-    }
     const currentData: Data[] = await storage.get(STORAGE_LABEL)
+    const checkResult = _check({ data })
+
+    if (checkResult) {
+      setSnackbar({
+        show: true,
+        text: checkResult,
+        type: 'error'
+      })
+      return
+    }
 
     for (const v of data) {
-      v.domain = v.domain.trim()
-
-      if (v.domain === '') continue
-      if (schema.domain.safeParse(v.domain).success === false) {
-        setSnackbar({
-          show: true,
-          text: 'Invalid domain format.',
-          type: 'error'
-        })
-      }
-
       if (loadedData.map(h => h.domain).includes(v.domain)) {
         const oneData = currentData.find(h => h.domain === v.domain)
 
@@ -169,15 +192,6 @@ function Options() {
       } else{
         v.elapsed = 0
       }
-    }
-
-    if (isDuplicateDomains({ domains: data.map(v => v.domain).filter(v => v !== '') })) {
-      setSnackbar({
-        show: true,
-        text: 'Duplicate domains are not allowed.',
-        type: 'error'
-      })
-      return
     }
 
     await storage.set(STORAGE_LABEL, data.filter(v => v.domain !== ''))
