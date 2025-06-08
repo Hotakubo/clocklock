@@ -33,7 +33,7 @@ const Elapsed = ({
   duration: Data['duration'];
 }) => {
   return (
-    <div className="grid justify-center w-24 mt-2 ml-2 p-2 bg-white border-2 border-gray-300 font-bold font-sans">
+    <div className="grid justify-center w-24 mt-2 ml-2 p-2 bg-white border-2 border-gray-300 font-bold font-sans select-none">
       {parseElapsed({
         startDuration: duration,
         elapsed
