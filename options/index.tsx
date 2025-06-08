@@ -117,7 +117,7 @@ function Options() {
     type: 'info' | 'error';
   } | null>(null);
   const [data, dataSet] = useState(DATA_LIST)
-  const [loadedData, loadedDataSet] = useState([])
+  const [loadedData, loadedDataSet] = useState<typeof DATA_LIST>([])
 
   useEffect(() => {
     const getData = async () => {
@@ -177,8 +177,8 @@ function Options() {
     }
 
     for (const v of data) {
-      if (loadedData.map(h => h.domain).includes(v.domain)) {
-        const oneData = currentData.find(h => h.domain === v.domain)
+      if (loadedData.map(({ domain }) => domain).includes(v.domain)) {
+        const oneData = currentData.find(({ domain }) => domain === v.domain)
 
         if (oneData) {
           v.elapsed = oneData.elapsed
