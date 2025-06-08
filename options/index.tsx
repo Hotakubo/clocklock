@@ -122,7 +122,7 @@ function Options() {
     type: 'info' | 'error';
   } | null>(null);
   const [data, dataSet] = useState(DATA_LIST)
-  const [currentData, currentDataSet] = useState<typeof DATA_LIST>([])
+  const [currentData, currentDataSet] = useState<Data[]>([])
 
   useEffect(() => {
     const getData = async () => {

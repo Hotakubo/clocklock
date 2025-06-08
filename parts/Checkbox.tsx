@@ -15,7 +15,7 @@ const Checkbox: React.FC<CheckboxProps> = ({ checked, onChange, label }) => {
         onChange={(e) => onChange(e.target.checked)}
         className="w-4 h-4 border-gray-300 rounded-sm focus:ring-blue-500 cursor-pointer"
       />
-      <span>{label}</span>
+      <span className="select-none">{label}</span>
     </label>
   )
 }

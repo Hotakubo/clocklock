@@ -5,3 +5,7 @@ export type Data = {
   elapsed: number;
   updatedDate: number;
 }
+
+export type ConfigData = {
+  isElapsedShow: boolean;
+}
