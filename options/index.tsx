@@ -72,10 +72,15 @@ const _isDuplicateDomains = ({ domains }: { domains: Data['domain'][] }) => {
   return domains.length !== uniqueDomains.size
 }
 
-const _check = (data: { domain: Data['domain'] }[]) => {
+const _normalize = (data: Data[]) => {
   for (const v of data) {
     v.domain = v.domain.trim()
+  }
+  return data
+}
 
+const _check = (data: { domain: Data['domain'] }[]) => {
+  for (const v of data) {
     if (v.domain === '') continue
     if (schema.domain.safeParse(v.domain).success === false) {
       return 'Invalid domain format.'
@@ -165,7 +170,8 @@ function Options() {
 
   const onSave = async () => {
     const currentData: Data[] = await storage.get(STORAGE_LABEL)
-    const checkResult = _check(data)
+    const normalizeData = _normalize(data)
+    const checkResult = _check(normalizeData)
 
     if (checkResult) {
       setSnackbar({
@@ -176,7 +182,7 @@ function Options() {
       return
     }
 
-    for (const v of data) {
+    for (const v of normalizeData) {
       if (loadedData.map(({ domain }) => domain).includes(v.domain)) {
         const oneData = currentData.find(({ domain }) => domain === v.domain)
 
@@ -188,10 +194,10 @@ function Options() {
       }
     }
 
-    await storage.set(STORAGE_LABEL, data.filter(v => v.domain !== ''))
+    await storage.set(STORAGE_LABEL, normalizeData.filter(v => v.domain !== ''))
 
-    dataSet(data)
-    loadedDataSet(structuredClone(data.filter(v => v.domain !== '')))
+    dataSet(normalizeData)
+    loadedDataSet(structuredClone(normalizeData.filter(v => v.domain !== '')))
 
     setSnackbar({
       show: true,
