@@ -13,7 +13,7 @@ const _getValue = async ({
 }) => {
   const data: Data[] = await storage.get(STORAGE_LABEL)
 
-  return data.find(v => v.domain.endsWith(domain)) || null
+  return data.find(v => domain.endsWith(v.domain)) || null
 }
 
 const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
