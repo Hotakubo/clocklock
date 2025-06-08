@@ -172,6 +172,7 @@ function Options() {
     const storageData: Data[] = await storage.get(STORAGE_LABEL)
     const readyData = _normalize(data)
     const checkResult = _check(readyData)
+    const hasCurrentData = (domain: Data['domain']) => currentData.map(({ domain }) => domain).includes(domain)
 
     if (checkResult) {
       setSnackbar({
@@ -183,7 +184,7 @@ function Options() {
     }
 
     for (const v of readyData) {
-      if (currentData.map(({ domain }) => domain).includes(v.domain)) {
+      if (hasCurrentData) {
         const value = storageData.find(({ domain }) => domain === v.domain)
 
         if (value) {
