@@ -1,6 +1,7 @@
 import type { Data } from '~/shared/types'
 import { Storage } from '@plasmohq/storage'
 import { STORAGE_LABEL, DELAY } from '~/shared/constants'
+import { isDomainMatch, tabsToDomains } from '~/shared/elapsed'
 
 const storage = new Storage()
 
@@ -14,34 +15,18 @@ const _isUpdateDateBefore = ({ updatedDate }: { updatedDate: Data['updatedDate']
   return updateDay < today
 }
 
-const _isDomainMatch = ({
-  domains,
-  domain,
-  isSubdomainIncluded
-}: {
-  domains: Data['domain'][],
-  domain: Data['domain'],
-  isSubdomainIncluded: Data['isSubdomainIncluded']
-}) => {
-  if (isSubdomainIncluded) {
-    return domains.some(d => domain.endsWith(d))
-  }
-  return domains.includes(domain)
-}
-
 const checkOpenTabs = async () => {
   const data: Data[] = await storage.get(STORAGE_LABEL)
-  const tabs = await chrome.tabs.query({})
-  const openDomains = tabs.map(v => new URL(v.url).hostname)
+  const domains = await tabsToDomains()
 
   for (const v of data) {
-    const isDomainMatch = _isDomainMatch({
-      domains: openDomains,
+    const isMatch = isDomainMatch({
+      domains: domains,
       domain: v.domain,
       isSubdomainIncluded: v.isSubdomainIncluded
     })
 
-    if (isDomainMatch && v.elapsed <= v.duration) {
+    if (isMatch && v.elapsed <= v.duration) {
       v.elapsed = v.elapsed + DELAY
     }
 
