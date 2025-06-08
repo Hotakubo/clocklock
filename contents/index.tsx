@@ -45,8 +45,15 @@ const Elapsed = ({
 const Cover = () => {
   const [width, widthSet] = useState<number>(document.documentElement.clientWidth)
   const [height, heightSet] = useState<number>(document.documentElement.scrollHeight)
-  const [elapsed, elapsedSet] = useState<Data['elapsed']>(0)
-  const [duration, durationSet] = useState<Data['duration']>(0)
+  const [data, dataSet] = useState<{
+    isMatch: boolean;
+    elapsed: Data['elapsed'];
+    duration: Data['duration'];
+  }>({
+    isMatch: false,
+    elapsed: 0,
+    duration: 0
+  })
   const [isElapsedShow, isElapsedShowSet] = useState<ConfigData['isElapsedShow']>(false)
 
   useEffect(() => {
@@ -67,8 +74,7 @@ const Cover = () => {
         }
       })
 
-      elapsedSet(data.elapsed)
-      durationSet(data.duration)
+      dataSet(data)
 
       const config = await sendToBackground({
         name: 'config'
@@ -92,11 +98,11 @@ const Cover = () => {
     }
   }, [])
 
-  if (elapsed <= duration) {
-    if (isElapsedShow) {
+  if (data.elapsed <= data.duration) {
+    if (isElapsedShow && data.isMatch) {
       return <Elapsed
-        elapsed={elapsed}
-        duration={duration}
+        elapsed={data.elapsed}
+        duration={data.duration}
       />
     }
     return <></>
