@@ -170,8 +170,8 @@ function Options() {
 
   const onSave = async () => {
     const storageData: Data[] = await storage.get(STORAGE_LABEL)
-    const normalizeData = _normalize(data)
-    const checkResult = _check(normalizeData)
+    const processedData = _normalize(data)
+    const checkResult = _check(processedData)
 
     if (checkResult) {
       setSnackbar({
@@ -182,22 +182,23 @@ function Options() {
       return
     }
 
-    for (const v of normalizeData) {
+    for (const v of processedData) {
       if (loadedData.map(({ domain }) => domain).includes(v.domain)) {
         const oneData = storageData.find(({ domain }) => domain === v.domain)
 
         if (oneData) {
           v.elapsed = oneData.elapsed
         }
-      } else{
+      } else {
         v.elapsed = 0
       }
     }
+    const existingData = processedData.filter(v => v.domain !== '')
 
-    await storage.set(STORAGE_LABEL, normalizeData.filter(v => v.domain !== ''))
+    await storage.set(STORAGE_LABEL, existingData)
 
-    dataSet(normalizeData)
-    loadedDataSet(structuredClone(normalizeData.filter(v => v.domain !== '')))
+    loadedDataSet(structuredClone(existingData))
+    dataSet(processedData)
 
     setSnackbar({
       show: true,
