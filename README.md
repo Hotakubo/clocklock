@@ -23,6 +23,8 @@ You can always disable this extension or find ways around it, but even a slight 
 
 - `options/index.tsx`
     - Browser Extension Pages
+- `popup/index.tsx`
+    - Popup Pages
 - `contents/index.tsx`
     - Components to display on the page you want to restrict
     - `checkOpenTabs` method is the main process

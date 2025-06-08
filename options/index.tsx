@@ -8,14 +8,16 @@ import Snackbar from '~/parts/Snackbar'
 import { STORAGE_LABEL } from '~/shared/constants'
 import '~/shared/style.css'
 
-const domainSchema = z.string().regex(
-  /^(?!:\/\/)([a-zA-Z0-9-_]+\.)+[a-zA-Z]{2,}$/,
-  'Invalid domain format'
-)
+const schema = {
+  domain: z.string().regex(
+    /^(?!:\/\/)([a-zA-Z0-9-_]+\.)+[a-zA-Z]{2,}$/,
+    'Invalid domain format'
+  )
+}
 
 const storage = new Storage()
 
-const durationList =[
+const DURATION_LIST =[
   { name: '5 minutes', value: 5 * 60 * 1000 },
   { name: '10 minutes', value: 10 * 60 * 1000 },
   { name: '30 minutes', value: 30 * 60 * 1000 },
@@ -27,7 +29,7 @@ const durationList =[
   { name: '6 hours', value: 6 * 60 * 60 * 1000 }
 ]
 
-const dataList = [
+const DATA_LIST = [
   {
     domain: '',
     isSubdomainIncluded: false,
@@ -92,7 +94,7 @@ function Options() {
     text: string;
     type: 'info' | 'error';
   } | null>(null);
-  const [data, dataSet] = useState(dataList)
+  const [data, dataSet] = useState(DATA_LIST)
   const [loadedData, loadedDataSet] = useState([])
 
   useEffect(() => {
@@ -104,11 +106,11 @@ function Options() {
 
         const setDataList = []
 
-        for (let i = 0; i < dataList.length; i++) {
+        for (let i = 0; i < DATA_LIST.length; i++) {
           if (data[i]) {
             setDataList.push(data[i])
           } else {
-            setDataList.push(dataList[i])
+            setDataList.push(DATA_LIST[i])
           }
         }
 
@@ -150,7 +152,7 @@ function Options() {
       v.domain = v.domain.trim()
 
       if (v.domain === '') continue
-      if (domainSchema.safeParse(v.domain).success === false) {
+      if (schema.domain.safeParse(v.domain).success === false) {
         setSnackbar({
           show: true,
           text: 'Invalid domain format.',
@@ -210,7 +212,7 @@ function Options() {
               </div>
               <div className="col-span-2 rounded-md border border-gray-400 text-gray-600">
                 <Select
-                  options={durationList}
+                  options={DURATION_LIST}
                   selected={v.duration}
                   onChange={value => onChange({
                     index: i,
