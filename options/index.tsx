@@ -72,13 +72,7 @@ const _isDuplicateDomains = ({ domains }: { domains: Data['domain'][] }) => {
   return domains.length !== uniqueDomains.size
 }
 
-const _check = ({
-  data
-}: {
-  data: {
-    domain: Data['domain'];
-  }[]
-}) => {
+const _check = (data: { domain: Data['domain'] }[]) => {
   for (const v of data) {
     v.domain = v.domain.trim()
 
@@ -171,7 +165,7 @@ function Options() {
 
   const onSave = async () => {
     const currentData: Data[] = await storage.get(STORAGE_LABEL)
-    const checkResult = _check({ data })
+    const checkResult = _check(data)
 
     if (checkResult) {
       setSnackbar({
