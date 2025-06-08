@@ -118,18 +118,7 @@ const Cover = () => {
         alignItems: "center"
       }}
     >
-      <div
-        style={{
-          width: "100%",
-          height: "100%",
-          display: "grid",
-          justifyItems: "center",
-          alignItems: "center",
-          background: "rgba(200, 200, 200, 0.9)",
-          backdropFilter: "blur(10px)"
-        }}
-      >
-      </div>
+      <div className="grid w-full h-full justify-center items-center backdrop-blur-md bacground-gray-200 bg-opacity-90"></div>
     </div>
   )
 }
