@@ -23,6 +23,7 @@ You can always disable this extension or find ways around it, but even a slight 
 
 - `options/index.tsx`
     - Browser Extension Pages
+    - `onSave` method is the main logic
 - `popup/index.tsx`
     - Popup Pages
 - `contents/index.tsx`
