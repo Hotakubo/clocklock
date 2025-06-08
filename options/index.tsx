@@ -185,7 +185,7 @@ function Options() {
     }
 
     for (const v of readyData) {
-      if (hasCurrentData) {
+      if (hasCurrentData(v.domain)) {
         const value = getStorageData(v.domain)
 
         if (value) {
