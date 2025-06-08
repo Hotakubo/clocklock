@@ -1,7 +1,16 @@
-import type { PlasmoCSConfig } from 'plasmo'
+import type { PlasmoCSConfig, PlasmoGetStyle } from 'plasmo'
+import type { Data, ConfigData } from '~/shared/types'
 import { useState, useEffect } from 'react'
 import { sendToBackground } from "@plasmohq/messaging"
 import { DELAY } from '~/shared/constants'
+import { parseElapsed } from '~/shared/elapsed'
+import styleText from "data-text:~/shared/style.css"
+
+export const getStyle: PlasmoGetStyle = () => {
+  const style = document.createElement('style')
+  style.textContent = styleText
+  return style
+}
 
 export const config: PlasmoCSConfig = {
   matches: [
@@ -16,19 +25,40 @@ const _currentHostname = (): string => {
   return hostname
 }
 
+const Elapsed = ({
+  elapsed,
+  duration
+}: {
+  elapsed: Data['elapsed'];
+  duration: Data['duration'];
+}) => {
+  return (
+    <div className="grid justify-center w-24 mt-2 ml-2 p-2 bg-white border-2 border-gray-300 font-bold">
+      {parseElapsed({
+        startDuration: duration,
+        elapsed
+      })}
+    </div>
+  )
+}
+
 const Cover = () => {
-  const [isElapsed, isElapsedSet] = useState<boolean>(false)
   const [width, widthSet] = useState<number>(document.documentElement.clientWidth)
   const [height, heightSet] = useState<number>(document.documentElement.scrollHeight)
+  const [elapsed, elapsedSet] = useState<Data['elapsed']>(0)
+  const [duration, durationSet] = useState<Data['duration']>(0)
+  const [isElapsedShow, isElapsedShowSet] = useState<ConfigData['isElapsedShow']>(false)
 
   useEffect(() => {
     const handleResize = () => {
       widthSet(document.documentElement.clientWidth)
       heightSet(document.documentElement.scrollHeight)
     }
+
     const handleScroll = () => {
       heightSet(document.documentElement.scrollHeight)
     }
+
     const checkElapsed = async () => {
       const res = await sendToBackground({
         name: 'ping',
@@ -37,7 +67,16 @@ const Cover = () => {
         }
       })
 
-      isElapsedSet(res.isElapsed)
+      elapsedSet(res.elapsed)
+      durationSet(res.duration)
+
+      const res2 = await sendToBackground({
+        name: 'config'
+      })
+
+      if (res2) {
+        isElapsedShowSet(res2.isElapsedShow)
+      }
     }
 
     checkElapsed()
@@ -53,7 +92,15 @@ const Cover = () => {
     }
   }, [])
 
-  if (!isElapsed) return <></>
+  if (elapsed <= duration) {
+    if (isElapsedShow) {
+      return <Elapsed
+        elapsed={elapsed}
+        duration={duration}
+      />
+    }
+    return <></>
+  }
 
   return (
     <div

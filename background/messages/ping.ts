@@ -12,12 +12,14 @@ const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
 
   if (value) {
     res.send({
-      isElapsed: value.elapsed >= value.duration
+      elapsed: value.elapsed,
+      duration: value.duration
     })
   }
 
   res.send({
-    isElapsed: false
+    elapsed: 0,
+    duration: 0
   })
 }
 

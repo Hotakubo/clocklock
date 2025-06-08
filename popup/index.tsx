@@ -1,36 +1,17 @@
 import type { Data, ConfigData } from '~/shared/types'
 import React, { useEffect, useState } from 'react'
-import { intervalToDuration, differenceInMilliseconds } from 'date-fns'
+import { differenceInMilliseconds } from 'date-fns'
 import { Storage } from '@plasmohq/storage'
 import {
   STORAGE_LABEL,
   STORAGE_CONFIG_LABEL,
   DELAY
 } from '~/shared/constants'
+import { parseElapsed } from '~/shared/elapsed'
 import Checkbox from '~/parts/Checkbox'
 import '~/shared/style.css'
 
 const storage = new Storage()
-
-const _parseElapsed = ({
-  startDuration,
-  elapsed
- }: {
-  startDuration: Data['duration'];
-  elapsed: Data['elapsed'];
-}): string => {
-  const diff = differenceInMilliseconds(new Date(elapsed), new Date(startDuration))
-
-  const duration = intervalToDuration({
-    start: 0,
-    end: Math.abs(diff)
-  })
-  const hours = duration.hours ? String(duration.hours).padStart(2, '0') : '00'
-  const minutes = duration.minutes ? String(duration.minutes).padStart(2, '0') : '00'
-  const seconds = duration.seconds ? String(duration.seconds).padStart(2, '0') : '00'
-
-  return `${diff > 0 ? '-' : ''}${hours}:${minutes}:${seconds}`
-}
 
 const _durationStyle = ({
   elapsed,
@@ -96,7 +77,7 @@ const Popup = () => {
         {data.map((v, index) => (
           <li key={index} className="flex gap-4 justify-between text-lg">
             <div>{v.domain}</div>
-            <div className={`${_durationStyle({ elapsed: v.elapsed, duration: v.duration })}`}>{_parseElapsed({
+            <div className={`${_durationStyle({ elapsed: v.elapsed, duration: v.duration })}`}>{parseElapsed({
               startDuration: v.duration,
               elapsed: v.elapsed
             })}</div>
