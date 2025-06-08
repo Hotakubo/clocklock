@@ -122,14 +122,14 @@ function Options() {
     type: 'info' | 'error';
   } | null>(null);
   const [data, dataSet] = useState(DATA_LIST)
-  const [loadedData, loadedDataSet] = useState<typeof DATA_LIST>([])
+  const [currentData, currentDataSet] = useState<typeof DATA_LIST>([])
 
   useEffect(() => {
     const getData = async () => {
       const data: Data[] = await storage.get(STORAGE_LABEL)
 
       if (data) {
-        loadedDataSet(structuredClone(data))
+        currentDataSet(structuredClone(data))
 
         const setDataList = []
 
@@ -183,11 +183,11 @@ function Options() {
     }
 
     for (const v of readyData) {
-      if (loadedData.map(({ domain }) => domain).includes(v.domain)) {
-        const oneData = storageData.find(({ domain }) => domain === v.domain)
+      if (currentData.map(({ domain }) => domain).includes(v.domain)) {
+        const value = storageData.find(({ domain }) => domain === v.domain)
 
-        if (oneData) {
-          v.elapsed = oneData.elapsed
+        if (value) {
+          v.elapsed = value.elapsed
         }
       } else {
         v.elapsed = 0
@@ -197,7 +197,7 @@ function Options() {
 
     await storage.set(STORAGE_LABEL, existingData)
 
-    loadedDataSet(structuredClone(existingData))
+    currentDataSet(structuredClone(existingData))
     dataSet(readyData)
 
     setSnackbar({
