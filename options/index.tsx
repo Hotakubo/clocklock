@@ -169,7 +169,7 @@ function Options() {
   }
 
   const onSave = async () => {
-    const currentData: Data[] = await storage.get(STORAGE_LABEL)
+    const storageData: Data[] = await storage.get(STORAGE_LABEL)
     const normalizeData = _normalize(data)
     const checkResult = _check(normalizeData)
 
@@ -184,7 +184,7 @@ function Options() {
 
     for (const v of normalizeData) {
       if (loadedData.map(({ domain }) => domain).includes(v.domain)) {
-        const oneData = currentData.find(({ domain }) => domain === v.domain)
+        const oneData = storageData.find(({ domain }) => domain === v.domain)
 
         if (oneData) {
           v.elapsed = oneData.elapsed
