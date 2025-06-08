@@ -60,22 +60,22 @@ const Cover = () => {
     }
 
     const checkElapsed = async () => {
-      const res = await sendToBackground({
+      const data = await sendToBackground({
         name: 'ping',
         body: {
           domain: _currentHostname()
         }
       })
 
-      elapsedSet(res.elapsed)
-      durationSet(res.duration)
+      elapsedSet(data.elapsed)
+      durationSet(data.duration)
 
-      const res2 = await sendToBackground({
+      const config = await sendToBackground({
         name: 'config'
       })
 
-      if (res2) {
-        isElapsedShowSet(res2.isElapsedShow)
+      if (config) {
+        isElapsedShowSet(config.isElapsedShow)
       }
     }
 
