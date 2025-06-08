@@ -1,2 +1,3 @@
 export const STORAGE_LABEL = 'CLOCKLOCK_DATA'
+export const STORAGE_CONFIG_LABEL = 'CLOCKLOCK_CONFIG_DATA'
 export const DELAY = 5000

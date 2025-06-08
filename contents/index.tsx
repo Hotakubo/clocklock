@@ -1,7 +1,16 @@
-import type { PlasmoCSConfig } from 'plasmo'
+import type { PlasmoCSConfig, PlasmoGetStyle } from 'plasmo'
+import type { Data, ConfigData } from '~/shared/types'
 import { useState, useEffect } from 'react'
 import { sendToBackground } from "@plasmohq/messaging"
 import { DELAY } from '~/shared/constants'
+import { parseElapsed } from '~/shared/elapsed'
+import styleText from "data-text:~/shared/style.css"
+
+export const getStyle: PlasmoGetStyle = () => {
+  const style = document.createElement('style')
+  style.textContent = styleText
+  return style
+}
 
 export const config: PlasmoCSConfig = {
   matches: [
@@ -16,28 +25,64 @@ const _currentHostname = (): string => {
   return hostname
 }
 
+const Elapsed = ({
+  elapsed,
+  duration
+}: {
+  elapsed: Data['elapsed'];
+  duration: Data['duration'];
+}) => {
+  return (
+    <div className="grid justify-center w-24 mt-2 ml-2 p-2 bg-white border-2 border-gray-300 font-bold">
+      {parseElapsed({
+        startDuration: duration,
+        elapsed
+      })}
+    </div>
+  )
+}
+
 const Cover = () => {
-  const [isElapsed, isElapsedSet] = useState<boolean>(false)
   const [width, widthSet] = useState<number>(document.documentElement.clientWidth)
   const [height, heightSet] = useState<number>(document.documentElement.scrollHeight)
+  const [data, dataSet] = useState<{
+    isMatch: boolean;
+    elapsed: Data['elapsed'];
+    duration: Data['duration'];
+  }>({
+    isMatch: false,
+    elapsed: 0,
+    duration: 0
+  })
+  const [isElapsedShow, isElapsedShowSet] = useState<ConfigData['isElapsedShow']>(false)
 
   useEffect(() => {
     const handleResize = () => {
       widthSet(document.documentElement.clientWidth)
       heightSet(document.documentElement.scrollHeight)
     }
+
     const handleScroll = () => {
       heightSet(document.documentElement.scrollHeight)
     }
+
     const checkElapsed = async () => {
-      const res = await sendToBackground({
+      const data = await sendToBackground({
         name: 'ping',
         body: {
           domain: _currentHostname()
         }
       })
 
-      isElapsedSet(res.isElapsed)
+      dataSet(data)
+
+      const config = await sendToBackground({
+        name: 'config'
+      })
+
+      if (config) {
+        isElapsedShowSet(config.isElapsedShow)
+      }
     }
 
     checkElapsed()
@@ -53,7 +98,15 @@ const Cover = () => {
     }
   }, [])
 
-  if (!isElapsed) return <></>
+  if (data.elapsed <= data.duration) {
+    if (isElapsedShow && data.isMatch) {
+      return <Elapsed
+        elapsed={data.elapsed}
+        duration={data.duration}
+      />
+    }
+    return <></>
+  }
 
   return (
     <div
@@ -73,7 +126,7 @@ const Cover = () => {
           justifyItems: "center",
           alignItems: "center",
           background: "rgba(200, 200, 200, 0.9)",
-          backdropFilter: "blur(5px)"
+          backdropFilter: "blur(10px)"
         }}
       >
       </div>
