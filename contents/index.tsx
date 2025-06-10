@@ -32,10 +32,10 @@ const Elapsed = ({
   elapsed: Data['elapsed'];
   duration: Data['duration'];
 }) => {
-  const diff = diffMs({
+  const diff = Math.abs(diffMs({
     duration,
     elapsed
-  })
+  }))
   const bgStyle = diff < DURATION_LIST[0].value ? 'bg-red-300' : diff < DURATION_LIST[1].value ? 'bg-yellow-300' : 'bg-green-400'
 
   return (

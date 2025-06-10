@@ -8,7 +8,7 @@ export const diffMs = ({
   duration: Data['duration'];
   elapsed: Data['elapsed'];
 }) => {
-  return Math.abs(differenceInMilliseconds(new Date(elapsed), new Date(duration)))
+  return differenceInMilliseconds(new Date(duration), new Date(elapsed))
 }
 
 export const parseElapsed = ({
@@ -18,7 +18,10 @@ export const parseElapsed = ({
   duration: Data['duration'];
   elapsed: Data['elapsed'];
 }) => {
-  const diff = differenceInMilliseconds(new Date(elapsed), new Date(duration))
+  const diff = diffMs({
+    duration: duration,
+    elapsed: elapsed
+  })
 
   const time = intervalToDuration({
     start: 0,
@@ -28,7 +31,7 @@ export const parseElapsed = ({
   const minutes = time.minutes ? String(time.minutes).padStart(2, '0') : '00'
   const seconds = time.seconds ? String(time.seconds).padStart(2, '0') : '00'
 
-  return `${diff > 0 ? '-' : ''}${hours}:${minutes}:${seconds}`
+  return `${diff < 0 ? '-' : ''}${hours}:${minutes}:${seconds}`
 }
 
 export const isDomainMatch = ({
