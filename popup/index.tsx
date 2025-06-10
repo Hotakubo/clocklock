@@ -7,7 +7,7 @@ import {
   STORAGE_CONFIG_LABEL,
   DELAY
 } from '~/shared/constants'
-import { parseElapsed } from '~/shared/elapsed'
+import { diffMs, parseElapsed } from '~/shared/elapsed'
 import Checkbox from '~/parts/Checkbox'
 import '~/shared/style.css'
 
@@ -20,9 +20,12 @@ const _durationStyle = ({
   elapsed: Data['elapsed'];
   duration: Data['duration'];
 }) => {
-  const diff = differenceInMilliseconds(new Date(elapsed), new Date(duration))
+  const diff = diffMs({
+    duration,
+    elapsed
+  })
 
-  return diff > 0 ? 'text-red-600' : ''
+  return diff < 0 ? 'text-red-600' : ''
 }
 
 const Popup = () => {
