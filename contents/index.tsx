@@ -33,7 +33,7 @@ const Elapsed = ({
   duration: Data['duration'];
 }) => {
   return (
-    <div className="fixed top-2 left-2 grid justify-center w-24 p-2 bg-white border-2 border-gray-300 font-bold font-sans select-none">
+    <div className="fixed top-2 left-2 grid justify-center w-24 p-2 rounded-md bg-yellow-300 border-2 border-gray-800 font-bold font-sans select-none">
       {parseElapsed({
         startDuration: duration,
         elapsed
