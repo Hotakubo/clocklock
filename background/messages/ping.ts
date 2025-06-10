@@ -33,13 +33,13 @@ const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
       elapsed: value.elapsed,
       duration: value.duration
     })
+  } else {
+    res.send({
+      isMatch: false,
+      elapsed: 0,
+      duration: 0
+    })
   }
-
-  res.send({
-    isMatch: false,
-    elapsed: 0,
-    duration: 0
-  })
 }
 
 export default handler
