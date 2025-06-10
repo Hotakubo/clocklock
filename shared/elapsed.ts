@@ -1,13 +1,23 @@
 import type { Data } from '~/shared/types'
 import { intervalToDuration, differenceInMilliseconds } from 'date-fns'
 
+export const diffMs = ({
+  startDuration,
+  elapsed
+ }: {
+  startDuration: Data['duration'];
+  elapsed: Data['elapsed'];
+}) => {
+  return Math.abs(differenceInMilliseconds(new Date(elapsed), new Date(startDuration)))
+}
+
 export const parseElapsed = ({
   startDuration,
   elapsed
  }: {
   startDuration: Data['duration'];
   elapsed: Data['elapsed'];
-}): string => {
+}) => {
   const diff = differenceInMilliseconds(new Date(elapsed), new Date(startDuration))
 
   const duration = intervalToDuration({

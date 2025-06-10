@@ -3,7 +3,7 @@ import type { Data, ConfigData } from '~/shared/types'
 import { useState, useEffect } from 'react'
 import { sendToBackground } from "@plasmohq/messaging"
 import { DELAY, DURATION_LIST } from '~/shared/constants'
-import { parseElapsed } from '~/shared/elapsed'
+import { diffMs, parseElapsed } from '~/shared/elapsed'
 import styleText from "data-text:~/shared/style.css"
 
 export const getStyle: PlasmoGetStyle = () => {
@@ -32,7 +32,11 @@ const Elapsed = ({
   elapsed: Data['elapsed'];
   duration: Data['duration'];
 }) => {
-  const bgStyle = elapsed < DURATION_LIST[0].value ? 'bg-red-300' : elapsed < DURATION_LIST[1].value ? 'bg-yellow-300' : 'bg-green-400'
+  const diff = diffMs({
+    startDuration: duration,
+    elapsed
+  })
+  const bgStyle = diff < DURATION_LIST[0].value ? 'bg-red-300' : diff < DURATION_LIST[1].value ? 'bg-yellow-300' : 'bg-green-400'
 
   return (
     <div className={`fixed top-2 left-2 grid justify-center w-24 p-2 rounded-md border-2 border-gray-800 font-bold font-sans select-none ${bgStyle}`}>
