@@ -7,7 +7,7 @@ import {
   STORAGE_CONFIG_LABEL,
   DELAY
 } from '~/shared/constants'
-import { parseElapsed } from '~/shared/elapsed'
+import { diffMs, parseElapsed } from '~/shared/elapsed'
 import Checkbox from '~/parts/Checkbox'
 import '~/shared/style.css'
 
@@ -20,9 +20,12 @@ const _durationStyle = ({
   elapsed: Data['elapsed'];
   duration: Data['duration'];
 }) => {
-  const diff = differenceInMilliseconds(new Date(elapsed), new Date(duration))
+  const diff = diffMs({
+    duration,
+    elapsed
+  })
 
-  return diff > 0 ? 'text-red-600' : ''
+  return diff < 0 ? 'text-red-600' : ''
 }
 
 const Popup = () => {
@@ -75,10 +78,10 @@ const Popup = () => {
       </div>
       <ul className="list-none">
         {data.map((v, index) => (
-          <li key={index} className="flex gap-4 justify-between text-lg">
+          <li key={index} className="flex p-1 rounded-sm justify-between text-lg bg-gray-100 even:bg-gray-200">
             <div>{v.domain}</div>
-            <div className={`${_durationStyle({ elapsed: v.elapsed, duration: v.duration })}`}>{parseElapsed({
-              startDuration: v.duration,
+            <div className={`grid w-[5.5rem] justify-end items-center ${_durationStyle({ elapsed: v.elapsed, duration: v.duration })}`}>{parseElapsed({
+              duration: v.duration,
               elapsed: v.elapsed
             })}</div>
           </li>

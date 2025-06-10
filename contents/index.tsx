@@ -2,8 +2,8 @@ import type { PlasmoCSConfig, PlasmoGetStyle } from 'plasmo'
 import type { Data, ConfigData } from '~/shared/types'
 import { useState, useEffect } from 'react'
 import { sendToBackground } from "@plasmohq/messaging"
-import { DELAY } from '~/shared/constants'
-import { parseElapsed } from '~/shared/elapsed'
+import { DELAY, DURATION_LIST } from '~/shared/constants'
+import { diffMs, parseElapsed } from '~/shared/elapsed'
 import styleText from "data-text:~/shared/style.css"
 
 export const getStyle: PlasmoGetStyle = () => {
@@ -32,10 +32,16 @@ const Elapsed = ({
   elapsed: Data['elapsed'];
   duration: Data['duration'];
 }) => {
+  const diff = Math.abs(diffMs({
+    duration,
+    elapsed
+  }))
+  const bgStyle = diff < DURATION_LIST[0].value ? 'bg-red-300' : diff < DURATION_LIST[1].value ? 'bg-yellow-300' : 'bg-green-400'
+
   return (
-    <div className="grid justify-center w-24 mt-2 ml-2 p-2 bg-white border-2 border-gray-300 font-bold">
+    <div className={`fixed top-2 left-2 grid justify-center w-24 p-2 rounded-md border-2 border-gray-800 font-bold font-sans select-none ${bgStyle}`}>
       {parseElapsed({
-        startDuration: duration,
+        duration,
         elapsed
       })}
     </div>
@@ -112,24 +118,10 @@ const Cover = () => {
     <div
       style={{
         width: `${width}px`,
-        height: `${height}px`,
-        display: "grid",
-        justifyItems: "center",
-        alignItems: "center"
+        height: `${height}px`
       }}
     >
-      <div
-        style={{
-          width: "100%",
-          height: "100%",
-          display: "grid",
-          justifyItems: "center",
-          alignItems: "center",
-          background: "rgba(200, 200, 200, 0.9)",
-          backdropFilter: "blur(10px)"
-        }}
-      >
-      </div>
+      <div className="grid w-full h-full justify-center items-center backdrop-blur-md"></div>
     </div>
   )
 }
