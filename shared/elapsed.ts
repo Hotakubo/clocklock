@@ -12,21 +12,21 @@ export const diffMs = ({
 }
 
 export const parseElapsed = ({
-  startDuration,
+  duration,
   elapsed
  }: {
-  startDuration: Data['duration'];
+  duration: Data['duration'];
   elapsed: Data['elapsed'];
 }) => {
-  const diff = differenceInMilliseconds(new Date(elapsed), new Date(startDuration))
+  const diff = differenceInMilliseconds(new Date(elapsed), new Date(duration))
 
-  const duration = intervalToDuration({
+  const time = intervalToDuration({
     start: 0,
     end: Math.abs(diff)
   })
-  const hours = duration.hours ? String(duration.hours).padStart(2, '0') : '00'
-  const minutes = duration.minutes ? String(duration.minutes).padStart(2, '0') : '00'
-  const seconds = duration.seconds ? String(duration.seconds).padStart(2, '0') : '00'
+  const hours = time.hours ? String(time.hours).padStart(2, '0') : '00'
+  const minutes = time.minutes ? String(time.minutes).padStart(2, '0') : '00'
+  const seconds = time.seconds ? String(time.seconds).padStart(2, '0') : '00'
 
   return `${diff > 0 ? '-' : ''}${hours}:${minutes}:${seconds}`
 }

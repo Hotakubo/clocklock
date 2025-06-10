@@ -41,7 +41,7 @@ const Elapsed = ({
   return (
     <div className={`fixed top-2 left-2 grid justify-center w-24 p-2 rounded-md border-2 border-gray-800 font-bold font-sans select-none ${bgStyle}`}>
       {parseElapsed({
-        startDuration: duration,
+        duration,
         elapsed
       })}
     </div>
