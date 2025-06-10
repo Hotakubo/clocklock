@@ -5,7 +5,7 @@ import { Storage } from '@plasmohq/storage'
 import Select from '~/parts/Select'
 import Checkbox from '~/parts/Checkbox'
 import Snackbar from '~/parts/Snackbar'
-import { STORAGE_LABEL } from '~/shared/constants'
+import { STORAGE_LABEL, DURATION_LIST } from '~/shared/constants'
 import '~/shared/style.css'
 
 const schema = {
@@ -16,18 +16,6 @@ const schema = {
 }
 
 const storage = new Storage()
-
-const DURATION_LIST =[
-  { name: '5 minutes', value: 5 * 60 * 1000 },
-  { name: '10 minutes', value: 10 * 60 * 1000 },
-  { name: '30 minutes', value: 30 * 60 * 1000 },
-  { name: '1 hour', value: 1 * 60 * 60 * 1000 },
-  { name: '2 hours', value: 2 * 60 * 60 * 1000 },
-  { name: '3 hours', value: 3 * 60 * 60 * 1000 },
-  { name: '4 hours', value: 4 * 60 * 60 * 1000 },
-  { name: '5 hours', value: 5 * 60 * 60 * 1000 },
-  { name: '6 hours', value: 6 * 60 * 60 * 1000 }
-]
 
 const DATA_LIST = [
   {
