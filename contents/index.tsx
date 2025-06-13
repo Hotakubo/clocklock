@@ -39,7 +39,7 @@ const Elapsed = ({
   const bgStyle = diff < DURATION_LIST[0].value ? 'bg-red-300' : diff < DURATION_LIST[1].value ? 'bg-yellow-300' : 'bg-green-400'
 
   return (
-    <div className={`fixed top-2 left-2 grid justify-center w-24 p-2 rounded-md border-2 border-gray-800 font-bold font-sans select-none ${bgStyle}`}>
+    <div className={`fixed font-bold font-sans select-none ${bgStyle}`}>
       {parseElapsed({
         duration,
         elapsed
