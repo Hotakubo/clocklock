@@ -2,7 +2,6 @@ import type { PlasmoMessaging } from '@plasmohq/messaging'
 import type { Data } from '~/shared/types'
 import { Storage } from '@plasmohq/storage'
 import { STORAGE_LABEL } from '~/shared/constants'
-import { isDomainMatch, tabsToDomains } from '~/shared/elapsed'
 
 const storage = new Storage()
 
@@ -16,16 +15,36 @@ const _getValue = async ({
   return data.find(v => domain.endsWith(v.domain)) || null
 }
 
+const _isDomainMatch = ({
+  storageDomains,
+  tabDomain,
+}: {
+  storageDomains: {
+    domain: Data['domain'];
+    isSubdomainIncluded: Data['isSubdomainIncluded'];
+  }[];
+  tabDomain: Data['domain'];
+}) => {
+  return storageDomains.some(v => {
+    if (v.isSubdomainIncluded) {
+      return tabDomain.endsWith(v.domain)
+    }
+    return v.domain === tabDomain
+  })
+}
+
 const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
+  const data: Data[] = await storage.get(STORAGE_LABEL)
   const { domain }: { domain: Data['domain'] } = req.body
-  const domains = await tabsToDomains()
   const value = await _getValue({ domain })
 
   if (value) {
-    const isMatch = isDomainMatch({
-      domains,
-      domain,
-      isSubdomainIncluded: value.isSubdomainIncluded
+    const isMatch = _isDomainMatch({
+      storageDomains: data.map(v => ({
+        domain: v.domain,
+        isSubdomainIncluded: v.isSubdomainIncluded
+      })),
+      tabDomain: domain
     })
 
     res.send({

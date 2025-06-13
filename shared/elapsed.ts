@@ -34,21 +34,6 @@ export const parseElapsed = ({
   return `${diff < 0 ? '-' : ''}${hours}:${minutes}:${seconds}`
 }
 
-export const isDomainMatch = ({
-  domains,
-  domain,
-  isSubdomainIncluded
-}: {
-  domains: Data['domain'][],
-  domain: Data['domain'],
-  isSubdomainIncluded: Data['isSubdomainIncluded']
-}) => {
-  if (isSubdomainIncluded) {
-    return domains.some(v => v.endsWith(domain))
-  }
-  return domains.includes(domain)
-}
-
 export const tabsToDomains = async () => {
   const tabs = await chrome.tabs.query({})
   return tabs.map(v => new URL(v.url).hostname)
