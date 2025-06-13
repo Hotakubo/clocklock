@@ -82,13 +82,24 @@ const _check = (data: { domain: Data['domain'] }[]) => {
   return null
 }
 
+const _urlToDomain = ({ url }: { url: string }) => {
+  try {
+    const parsedUrl = new URL(url)
+    return parsedUrl.hostname
+  } catch (e) {
+    return ''
+  }
+}
+
 const Domain = ({
   value,
   onChange,
+  onBlur = () => {},
   placeholder
 }: {
   value: string,
   onChange: (value: string) => void,
+  onBlur?: () => void,
   placeholder: string
 }) => {
   return (
@@ -98,6 +109,7 @@ const Domain = ({
       placeholder={placeholder}
       value={value}
       onChange={(e) => onChange(e.target.value)}
+      onBlur={() => onBlur()}
     />
   )
 }
@@ -154,6 +166,19 @@ function Options() {
     } : v)
 
     dataSet(nextData)
+  }
+
+  const onBlur = ({
+    domain
+  }: {
+    domain: Data['domain'];
+  }) => {
+    const normalizedDomain = _urlToDomain({ url: domain })
+
+    if (normalizedDomain !== '') {
+      const nextData = data.map(v => v.domain === domain ? { ...v, domain: normalizedDomain } : v)
+      dataSet(nextData)
+    }
   }
 
   const onSave = async () => {
@@ -213,6 +238,7 @@ function Options() {
                     isSubdomainIncluded: v.isSubdomainIncluded,
                     duration: v.duration
                   })}
+                  onBlur={() => onBlur({ domain: v.domain })}
                 />
               </div>
               <div className="col-span-2 rounded-md border border-gray-400 text-gray-600">
