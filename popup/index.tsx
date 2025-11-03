@@ -87,6 +87,7 @@ const Popup = () => {
           </li>
         ))}
       </ul>
+      <p className="text-sm select-none">It updates every five seconds.</p>
     </div>
   )
 }
