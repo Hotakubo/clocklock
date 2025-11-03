@@ -223,8 +223,16 @@ function Options() {
   }
 
   return (
-    <div className="grid gap-3 justify-center">
-      <div className="grid gap-4 w-[30rem] mt-4 text-gray-600 text-sm">
+    <div className="grid gap-3 pt-4 justify-center">
+      <div className="grid justify-end">
+        <button
+          className="h-[2.5rem] w-[5rem] p-1 rounded-md border border-gray-400 text-gray-600 text-sm active:bg-gray-200"
+          onClick={() => onSave()}
+        >
+          SAVE
+        </button>
+      </div>
+      <div className="grid gap-4 w-[30rem] text-gray-600 text-sm">
         {data.map((v, i) => {
           return (
             <div key={`${id}${i}`} className="grid grid-cols-7 gap-2 p-3 rounded-md border border-gray-400">
@@ -269,12 +277,6 @@ function Options() {
           )
         })}
       </div>
-      <button
-        className="p-1 rounded-md border border-gray-400 text-gray-600 text-sm active:bg-gray-200"
-        onClick={() => onSave()}
-      >
-        SAVE
-      </button>
       {snackbar && snackbar.show && (
         <Snackbar
           text={snackbar.text}
