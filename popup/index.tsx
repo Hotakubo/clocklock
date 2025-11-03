@@ -76,6 +76,7 @@ const Popup = () => {
           onChange={(v => onElapsedShow({ checked: v }))}
         />
       </div>
+      <p className="text-sm select-none">It updates every five seconds.</p>
       <ul className="list-none">
         {data.map((v, index) => (
           <li key={index} className="flex p-1 rounded-sm justify-between text-lg bg-gray-100 even:bg-gray-200">
@@ -87,7 +88,6 @@ const Popup = () => {
           </li>
         ))}
       </ul>
-      <p className="text-sm select-none">It updates every five seconds.</p>
     </div>
   )
 }
