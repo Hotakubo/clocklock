@@ -21,6 +21,7 @@ const DATA_LIST = [
   {
     domain: '',
     isSubdomainIncluded: false,
+    isGrayscaleEnabled: false,
     duration: 1 * 60 * 60 * 1000,
     elapsed: 0,
     updatedDate: new Date().getTime()
@@ -28,6 +29,7 @@ const DATA_LIST = [
   {
     domain: '',
     isSubdomainIncluded: false,
+    isGrayscaleEnabled: false,
     duration: 1 * 60 * 60 * 1000,
     elapsed: 0,
     updatedDate: new Date().getTime()
@@ -35,6 +37,7 @@ const DATA_LIST = [
   {
     domain: '',
     isSubdomainIncluded: false,
+    isGrayscaleEnabled: false,
     duration: 1 * 60 * 60 * 1000,
     elapsed: 0,
     updatedDate: new Date().getTime()
@@ -42,6 +45,7 @@ const DATA_LIST = [
   {
     domain: '',
     isSubdomainIncluded: false,
+    isGrayscaleEnabled: false,
     duration: 1 * 60 * 60 * 1000,
     elapsed: 0,
     updatedDate: new Date().getTime()
@@ -49,6 +53,7 @@ const DATA_LIST = [
   {
     domain: '',
     isSubdomainIncluded: false,
+    isGrayscaleEnabled: false,
     duration: 1 * 60 * 60 * 1000,
     elapsed: 0,
     updatedDate: new Date().getTime()
@@ -152,16 +157,19 @@ function Options() {
     index,
     domain,
     isSubdomainIncluded,
+    isGrayscaleEnabled,
     duration
   }: {
     index: number;
     domain: Data['domain'];
     isSubdomainIncluded: Data['isSubdomainIncluded'];
+    isGrayscaleEnabled: Data['isGrayscaleEnabled'];
     duration: Data['duration'];
   }) => {
     const nextData = data.map((v, i) => i === index ? { ...v,
       domain,
       isSubdomainIncluded,
+      isGrayscaleEnabled,
       duration
     } : v)
 
@@ -245,6 +253,7 @@ function Options() {
                     index: i,
                     domain: value,
                     isSubdomainIncluded: v.isSubdomainIncluded,
+                    isGrayscaleEnabled: v.isGrayscaleEnabled,
                     duration: v.duration
                   })}
                   onBlur={() => onBlur({ domain: v.domain })}
@@ -258,6 +267,7 @@ function Options() {
                     index: i,
                     domain: v.domain,
                     isSubdomainIncluded: v.isSubdomainIncluded,
+                    isGrayscaleEnabled: v.isGrayscaleEnabled,
                     duration: parseInt(value.target.value)
                   })}
                 />
@@ -269,9 +279,23 @@ function Options() {
                     index: i,
                     domain: v.domain,
                     isSubdomainIncluded: value,
+                    isGrayscaleEnabled: v.isGrayscaleEnabled,
                     duration: v.duration
                   })}
                   label="All sites ending in this domain will be affected."
+                />
+              </div>
+              <div className="col-span-7">
+                <Checkbox
+                  checked={v.isGrayscaleEnabled}
+                  onChange={value => onChange({
+                    index: i,
+                    domain: v.domain,
+                    isSubdomainIncluded: v.isSubdomainIncluded,
+                    isGrayscaleEnabled: value,
+                    duration: v.duration
+                  })}
+                  label="Turn it to grayscale."
                 />
               </div>
             </div>
