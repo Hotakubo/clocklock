@@ -236,6 +236,7 @@ function Options() {
         {data.map((v, i) => {
           return (
             <div key={`${id}${i}`} className="grid grid-cols-7 gap-2 p-3 rounded-md border border-gray-400">
+              <p className="col-span-7 font-semibold">Restricted page {i + 1}</p>
               <div className="col-span-5">
                 <Domain
                   placeholder="example.com"
