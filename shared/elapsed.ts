@@ -31,7 +31,7 @@ export const parseElapsed = ({
   const minutes = time.minutes ? String(time.minutes).padStart(2, '0') : '00'
   const seconds = time.seconds ? String(time.seconds).padStart(2, '0') : '00'
 
-  return `${diff < 0 ? '-' : ''}${hours}:${minutes}:${seconds}`
+  return diff < 0 ? `00:00:00` : `${hours}:${minutes}:${seconds}`
 }
 
 export const tabsToDomains = async () => {

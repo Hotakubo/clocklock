@@ -2,7 +2,7 @@ import type { PlasmoCSConfig, PlasmoGetStyle } from 'plasmo'
 import type { Data, ConfigData } from '~/shared/types'
 import { useState, useEffect } from 'react'
 import { sendToBackground } from "@plasmohq/messaging"
-import { DELAY_DEFAULT, DELAY, DURATION_LIST } from '~/shared/constants'
+import { DELAY_DEFAULT, DURATION_LIST } from '~/shared/constants'
 import { diffMs, parseElapsed } from '~/shared/elapsed'
 import styleText from "data-text:~/shared/style.css"
 
@@ -61,7 +61,6 @@ const Cover = () => {
     duration: 0
   })
   const [isElapsedShow, isElapsedShowSet] = useState<ConfigData['isElapsedShow']>(false)
-  const [isGrayscaleEnabled, isGrayscaleEnabledSet] = useState<ConfigData['isGrayscaleEnabled']>(false)
 
   useEffect(() => {
     const handleResize = () => {
@@ -83,12 +82,8 @@ const Cover = () => {
 
       if (data.isGrayscaleEnabled) {
         document.documentElement.style.filter = 'grayscale(100%)'
-
-        isGrayscaleEnabledSet(true)
       } else {
         document.documentElement.style.filter = 'none'
-
-        isGrayscaleEnabledSet(false)
       }
     }
 
@@ -114,8 +109,10 @@ const Cover = () => {
     checkElapsed()
     checkGrayscale()
 
-    setInterval(() => checkElapsed(), DELAY)
-    setInterval(() => checkGrayscale(), DELAY_DEFAULT)
+    setInterval(() => {
+      checkElapsed()
+      checkGrayscale()
+    }, DELAY_DEFAULT)
 
     window.addEventListener('resize', handleResize)
     window.addEventListener('scroll', handleScroll)
@@ -133,10 +130,6 @@ const Cover = () => {
         duration={data.duration}
       />
     }
-    return <></>
-  }
-
-  if (isGrayscaleEnabled) {
     return <></>
   }
 

@@ -1,11 +1,10 @@
 import type { Data, ConfigData } from '~/shared/types'
 import React, { useEffect, useState } from 'react'
-import { differenceInMilliseconds } from 'date-fns'
 import { Storage } from '@plasmohq/storage'
 import {
   STORAGE_LABEL,
   STORAGE_CONFIG_LABEL,
-  DELAY
+  DELAY_DEFAULT
 } from '~/shared/constants'
 import { diffMs, parseElapsed } from '~/shared/elapsed'
 import Checkbox from '~/parts/Checkbox'
@@ -48,7 +47,7 @@ const Popup = () => {
     }
     fetchData()
 
-    const interval = setInterval(fetchData, DELAY)
+    const interval = setInterval(fetchData, DELAY_DEFAULT)
 
     return () => clearInterval(interval)
   }, [])
@@ -76,7 +75,6 @@ const Popup = () => {
           onChange={(v => onElapsedShow({ checked: v }))}
         />
       </div>
-      <p className="text-sm select-none">It updates every five seconds.</p>
       <ul className="list-none">
         {data.map((v, index) => (
           <li key={index} className="flex p-1 rounded-sm justify-between text-lg bg-gray-100 even:bg-gray-200">
