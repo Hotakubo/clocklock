@@ -140,7 +140,7 @@ const Cover = () => {
         height: `${height}px`
       }}
     >
-      {/* <div className="grid w-full h-full justify-center items-center backdrop-blur-md"></div> */}
+      <div className="grid w-full h-full justify-center items-center backdrop-blur-md"></div>
     </div>
   )
 }
