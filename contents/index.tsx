@@ -74,14 +74,21 @@ const Cover = () => {
     }
 
     const checkGrayscale = async () => {
-      const config = await sendToBackground({
-        name: 'config'
+      const data = await sendToBackground({
+        name: 'ping',
+        body: {
+          domain: _currentHostname()
+        }
       })
 
-      if (config && config.isGrayscaleEnabled) {
+      if (data.isGrayscaleEnabled) {
         document.documentElement.style.filter = 'grayscale(100%)'
 
         isGrayscaleEnabledSet(true)
+      } else {
+        document.documentElement.style.filter = 'none'
+
+        isGrayscaleEnabledSet(false)
       }
     }
 

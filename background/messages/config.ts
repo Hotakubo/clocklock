@@ -10,8 +10,7 @@ const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
 
   if (data) {
     res.send({
-      isElapsedShow: data.isElapsedShow,
-      isGrayscaleEnabled: data.isGrayscaleEnabled
+      isElapsedShow: data.isElapsedShow
     })
   } else {
     res.send(null)
