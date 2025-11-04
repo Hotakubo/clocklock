@@ -9,4 +9,5 @@ export type Data = {
 
 export type ConfigData = {
   isElapsedShow: boolean;
+  isGrayscaleEnabled: boolean;
 }

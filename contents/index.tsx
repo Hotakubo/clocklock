@@ -2,7 +2,7 @@ import type { PlasmoCSConfig, PlasmoGetStyle } from 'plasmo'
 import type { Data, ConfigData } from '~/shared/types'
 import { useState, useEffect } from 'react'
 import { sendToBackground } from "@plasmohq/messaging"
-import { DELAY, DURATION_LIST } from '~/shared/constants'
+import { DELAY_DEFAULT, DELAY, DURATION_LIST } from '~/shared/constants'
 import { diffMs, parseElapsed } from '~/shared/elapsed'
 import styleText from "data-text:~/shared/style.css"
 
@@ -61,6 +61,7 @@ const Cover = () => {
     duration: 0
   })
   const [isElapsedShow, isElapsedShowSet] = useState<ConfigData['isElapsedShow']>(false)
+  const [isGrayscaleEnabled, isGrayscaleEnabledSet] = useState<ConfigData['isGrayscaleEnabled']>(false)
 
   useEffect(() => {
     const handleResize = () => {
@@ -70,6 +71,18 @@ const Cover = () => {
 
     const handleScroll = () => {
       heightSet(document.documentElement.scrollHeight)
+    }
+
+    const checkGrayscale = async () => {
+      const config = await sendToBackground({
+        name: 'config'
+      })
+
+      if (config && config.isGrayscaleEnabled) {
+        document.documentElement.style.filter = 'grayscale(100%)'
+
+        isGrayscaleEnabledSet(true)
+      }
     }
 
     const checkElapsed = async () => {
@@ -92,8 +105,10 @@ const Cover = () => {
     }
 
     checkElapsed()
+    checkGrayscale()
 
     setInterval(() => checkElapsed(), DELAY)
+    setInterval(() => checkGrayscale(), DELAY_DEFAULT)
 
     window.addEventListener('resize', handleResize)
     window.addEventListener('scroll', handleScroll)
@@ -114,6 +129,10 @@ const Cover = () => {
     return <></>
   }
 
+  if (isGrayscaleEnabled) {
+    return <></>
+  }
+
   return (
     <div
       style={{
@@ -121,7 +140,7 @@ const Cover = () => {
         height: `${height}px`
       }}
     >
-      <div className="grid w-full h-full justify-center items-center backdrop-blur-md"></div>
+      {/* <div className="grid w-full h-full justify-center items-center backdrop-blur-md"></div> */}
     </div>
   )
 }
