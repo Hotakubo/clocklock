@@ -8,7 +8,6 @@ const storage = new Storage()
 const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
   const data: ConfigData = await storage.get(STORAGE_CONFIG_LABEL)
 
-  console.log(data)
   if (data) {
     res.send({
       isElapsedShow: data.isElapsedShow,
