@@ -25,38 +25,6 @@ const DATA_LIST = [
     duration: 1 * 60 * 60 * 1000,
     elapsed: 0,
     updatedDate: new Date().getTime()
-  },
-  {
-    domain: '',
-    isSubdomainIncluded: false,
-    isGrayscaleEnabled: false,
-    duration: 1 * 60 * 60 * 1000,
-    elapsed: 0,
-    updatedDate: new Date().getTime()
-  },
-  {
-    domain: '',
-    isSubdomainIncluded: false,
-    isGrayscaleEnabled: false,
-    duration: 1 * 60 * 60 * 1000,
-    elapsed: 0,
-    updatedDate: new Date().getTime()
-  },
-  {
-    domain: '',
-    isSubdomainIncluded: false,
-    isGrayscaleEnabled: false,
-    duration: 1 * 60 * 60 * 1000,
-    elapsed: 0,
-    updatedDate: new Date().getTime()
-  },
-  {
-    domain: '',
-    isSubdomainIncluded: false,
-    isGrayscaleEnabled: false,
-    duration: 1 * 60 * 60 * 1000,
-    elapsed: 0,
-    updatedDate: new Date().getTime()
   }
 ]
 
