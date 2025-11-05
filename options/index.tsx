@@ -93,16 +93,16 @@ function Options() {
     text: string;
     type: 'info' | 'error';
   } | null>(null);
-  const [data, dataSet] = useState([ DATA ])
-  const [currentData, currentDataSet] = useState<Data[]>([])
+  const [savedData, savedDataSet] = useState<Data[]>([])
+  const [draftData, draftDataSet] = useState([ DATA ])
 
   useEffect(() => {
     const getData = async () => {
-      const data: Data[] = await storage.get(STORAGE_LABEL)
+      const storageData: Data[] = await storage.get(STORAGE_LABEL)
 
-      if (data) {
-        currentDataSet(structuredClone(data))
-        dataSet(data)
+      if (storageData) {
+        savedDataSet(structuredClone(storageData))
+        draftDataSet(structuredClone(storageData))
       }
     }
 
@@ -122,14 +122,14 @@ function Options() {
     isGrayscaleEnabled: Data['isGrayscaleEnabled'];
     duration: Data['duration'];
   }) => {
-    const nextData = data.map((v, i) => i === index ? { ...v,
+    const nextData = draftData.map((v, i) => i === index ? { ...v,
       domain,
       isSubdomainIncluded,
       isGrayscaleEnabled,
       duration
     } : v)
 
-    dataSet(nextData)
+    draftDataSet(nextData)
   }
 
   const onBlur = ({
@@ -140,54 +140,13 @@ function Options() {
     const normalizedDomain = _urlToDomain({ url: domain })
 
     if (normalizedDomain !== '') {
-      const nextData = data.map(v => v.domain === domain ? { ...v, domain: normalizedDomain } : v)
-      dataSet(nextData)
+      const nextData = draftData.map(v => v.domain === domain ? { ...v, domain: normalizedDomain } : v)
+      draftDataSet(nextData)
     }
-  }
-
-  const onSave = async () => {
-    const storageData: Data[] = await storage.get(STORAGE_LABEL)
-    const readyData = _normalize(data)
-    const checkResult = _check(readyData)
-    const hasCurrentData = (domain: Data['domain']) => currentData.find(({ domain: v }) => v === domain)
-    const getStorageData = (domain: Data['domain']) => storageData.find(({ domain: v }) => v === domain)
-
-    if (checkResult) {
-      setSnackbar({
-        show: true,
-        text: checkResult,
-        type: 'error'
-      })
-      return
-    }
-
-    for (const v of readyData) {
-      if (hasCurrentData(v.domain)) {
-        const value = getStorageData(v.domain)
-
-        if (value) {
-          v.elapsed = value.elapsed
-        }
-      } else {
-        v.elapsed = 0
-      }
-    }
-    const existingData = readyData.filter(v => v.domain !== '')
-
-    await storage.set(STORAGE_LABEL, existingData)
-
-    currentDataSet(structuredClone(existingData))
-    dataSet(readyData)
-
-    setSnackbar({
-      show: true,
-      text: 'Saved successfully.',
-      type: 'info'
-    })
   }
 
   const onAdd = () => {
-    const clonedData: Data[] = structuredClone(data)
+    const clonedData: Data[] = structuredClone(draftData)
     const normalizedData = _normalize(clonedData)
     const checkResult = _check(normalizedData)
 
@@ -200,7 +159,43 @@ function Options() {
       return
     }
 
-    dataSet([...normalizedData, DATA])
+    draftDataSet([...normalizedData, DATA])
+  }
+
+  const onSave = async () => {
+    const saveData = _normalize(draftData).filter(v => v.domain !== '')
+    const checkResult = _check(saveData)
+    const getSavedData = (domain: Data['domain']) => savedData.find(({ domain: v }) => v === domain)
+
+    if (checkResult) {
+      setSnackbar({
+        show: true,
+        text: checkResult,
+        type: 'error'
+      })
+      return
+    }
+
+    for (const v of saveData) {
+      const copySavedData = getSavedData(v.domain)
+
+      if (copySavedData) {
+        v.elapsed = copySavedData.elapsed
+      } else {
+        v.elapsed = 0
+      }
+    }
+
+    await storage.set(STORAGE_LABEL, saveData)
+
+    savedDataSet(structuredClone(saveData))
+    draftDataSet(structuredClone(saveData))
+
+    setSnackbar({
+      show: true,
+      text: 'Saved successfully.',
+      type: 'info'
+    })
   }
 
   return (
@@ -214,7 +209,7 @@ function Options() {
         </button>
       </div>
       <div className="grid gap-4 w-[30rem] text-gray-600 text-sm">
-        {data.map((v, i) => {
+        {draftData.map((v, i) => {
           return (
             <div key={`${id}${i}`} className="grid grid-cols-7 gap-2 p-3 rounded-md border border-gray-400">
               <p className="col-span-7 font-semibold">Restricted page {i + 1}</p>
