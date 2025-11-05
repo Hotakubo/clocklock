@@ -5,6 +5,7 @@ import { Storage } from '@plasmohq/storage'
 import Select from '~/parts/Select'
 import Checkbox from '~/parts/Checkbox'
 import Snackbar from '~/parts/Snackbar'
+import Add from '~/parts/Add'
 import { STORAGE_LABEL, DURATION_LIST } from '~/shared/constants'
 import '~/shared/style.css'
 
@@ -17,16 +18,14 @@ const schema = {
 
 const storage = new Storage()
 
-const DATA_LIST = [
-  {
-    domain: '',
-    isSubdomainIncluded: false,
-    isGrayscaleEnabled: false,
-    duration: 1 * 60 * 60 * 1000,
-    elapsed: 0,
-    updatedDate: new Date().getTime()
-  }
-]
+const DATA = {
+  domain: '',
+  isSubdomainIncluded: false,
+  isGrayscaleEnabled: false,
+  duration: 1 * 60 * 60 * 1000,
+  elapsed: 0,
+  updatedDate: new Date().getTime()
+}
 
 const _isDuplicateDomains = ({ domains }: { domains: Data['domain'][] }) => {
   const uniqueDomains = new Set(domains)
@@ -94,7 +93,7 @@ function Options() {
     text: string;
     type: 'info' | 'error';
   } | null>(null);
-  const [data, dataSet] = useState(DATA_LIST)
+  const [data, dataSet] = useState([ DATA ])
   const [currentData, currentDataSet] = useState<Data[]>([])
 
   useEffect(() => {
@@ -103,18 +102,7 @@ function Options() {
 
       if (data) {
         currentDataSet(structuredClone(data))
-
-        const setDataList = []
-
-        for (let i = 0; i < DATA_LIST.length; i++) {
-          if (data[i]) {
-            setDataList.push(data[i])
-          } else {
-            setDataList.push(DATA_LIST[i])
-          }
-        }
-
-        dataSet(setDataList)
+        dataSet(data)
       }
     }
 
@@ -198,6 +186,23 @@ function Options() {
     })
   }
 
+  const onAdd = () => {
+    const clonedData: Data[] = structuredClone(data)
+    const normalizedData = _normalize(clonedData)
+    const checkResult = _check(normalizedData)
+
+    if (checkResult) {
+      setSnackbar({
+        show: true,
+        text: checkResult,
+        type: 'error'
+      })
+      return
+    }
+
+    dataSet([...normalizedData, DATA])
+  }
+
   return (
     <div className="grid gap-3 pt-4 justify-center">
       <div className="grid justify-end">
@@ -269,6 +274,11 @@ function Options() {
             </div>
           )
         })}
+      </div>
+      <div className="grid justify-center">
+        <Add
+          onClick={() => onAdd()}
+        />
       </div>
       {snackbar && snackbar.show && (
         <Snackbar
