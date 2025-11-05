@@ -6,6 +6,7 @@ import Select from '~/parts/Select'
 import Checkbox from '~/parts/Checkbox'
 import Snackbar from '~/parts/Snackbar'
 import Add from '~/parts/Add'
+import Delete from '~/parts/Delete'
 import { STORAGE_LABEL, DURATION_LIST } from '~/shared/constants'
 import '~/shared/style.css'
 
@@ -160,6 +161,12 @@ function Options() {
     draftDataSet([...normalizedData, DATA])
   }
 
+  const onDelete = (index: number) => {
+    const nextData = draftData.filter((_, i) => i !== index)
+
+    draftDataSet(nextData)
+  }
+
   const onSave = async () => {
     const storageData: Data[] = await storage.get(STORAGE_LABEL)
     const saveData = _normalize(draftData).filter(v => v.domain !== '')
@@ -262,6 +269,12 @@ function Options() {
                     duration: v.duration
                   })}
                   label="Turn it to grayscale."
+                />
+              </div>
+              <div className="col-span-7">
+                <Delete
+                  onClick={() => onDelete(i)}
+                  ariaLabel={`Delete restricted page ${i + 1}`}
                 />
               </div>
             </div>
