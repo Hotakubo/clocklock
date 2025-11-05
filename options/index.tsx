@@ -93,7 +93,6 @@ function Options() {
     text: string;
     type: 'info' | 'error';
   } | null>(null);
-  const [savedData, savedDataSet] = useState<Data[]>([])
   const [draftData, draftDataSet] = useState([ DATA ])
 
   useEffect(() => {
@@ -101,7 +100,6 @@ function Options() {
       const storageData: Data[] = await storage.get(STORAGE_LABEL)
 
       if (storageData) {
-        savedDataSet(structuredClone(storageData))
         draftDataSet(structuredClone(storageData))
       }
     }
@@ -163,9 +161,10 @@ function Options() {
   }
 
   const onSave = async () => {
+    const storageData: Data[] = await storage.get(STORAGE_LABEL)
     const saveData = _normalize(draftData).filter(v => v.domain !== '')
     const checkResult = _check(saveData)
-    const getSavedData = (domain: Data['domain']) => savedData.find(({ domain: v }) => v === domain)
+    const getStorageData = (domain: Data['domain']) => storageData.find(({ domain: v }) => v === domain)
 
     if (checkResult) {
       setSnackbar({
@@ -177,10 +176,10 @@ function Options() {
     }
 
     for (const v of saveData) {
-      const copySavedData = getSavedData(v.domain)
+      const liveValue = getStorageData(v.domain)
 
-      if (copySavedData) {
-        v.elapsed = copySavedData.elapsed
+      if (liveValue) {
+        v.elapsed = liveValue.elapsed
       } else {
         v.elapsed = 0
       }
@@ -188,7 +187,6 @@ function Options() {
 
     await storage.set(STORAGE_LABEL, saveData)
 
-    savedDataSet(structuredClone(saveData))
     draftDataSet(structuredClone(saveData))
 
     setSnackbar({
