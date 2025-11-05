@@ -1,11 +1,10 @@
 import type { Data, ConfigData } from '~/shared/types'
 import React, { useEffect, useState } from 'react'
-import { differenceInMilliseconds } from 'date-fns'
 import { Storage } from '@plasmohq/storage'
 import {
   STORAGE_LABEL,
   STORAGE_CONFIG_LABEL,
-  DELAY
+  DELAY_DEFAULT
 } from '~/shared/constants'
 import { diffMs, parseElapsed } from '~/shared/elapsed'
 import Checkbox from '~/parts/Checkbox'
@@ -48,7 +47,7 @@ const Popup = () => {
     }
     fetchData()
 
-    const interval = setInterval(fetchData, DELAY)
+    const interval = setInterval(fetchData, DELAY_DEFAULT)
 
     return () => clearInterval(interval)
   }, [])

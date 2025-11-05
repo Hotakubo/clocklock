@@ -1,6 +1,6 @@
 import type { Data } from '~/shared/types'
 import { Storage } from '@plasmohq/storage'
-import { STORAGE_LABEL, DELAY } from '~/shared/constants'
+import { STORAGE_LABEL, DELAY_DEFAULT } from '~/shared/constants'
 import { tabsToDomains } from '~/shared/elapsed'
 
 const storage = new Storage()
@@ -47,7 +47,7 @@ const checkOpenTabs = async () => {
     })
 
     if (isMatch && v.elapsed <= v.duration) {
-      v.elapsed = v.elapsed + DELAY
+      v.elapsed = v.elapsed + DELAY_DEFAULT
     }
 
     if (_isUpdateDateBefore({ updatedDate: v.updatedDate })) {
@@ -59,4 +59,4 @@ const checkOpenTabs = async () => {
   await storage.set(STORAGE_LABEL, data)
 }
 
-setInterval(() => checkOpenTabs(), DELAY)
+setInterval(() => checkOpenTabs(), DELAY_DEFAULT)

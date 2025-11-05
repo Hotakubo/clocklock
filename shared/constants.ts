@@ -1,7 +1,8 @@
 export const STORAGE_LABEL = 'CLOCKLOCK_DATA'
 export const STORAGE_CONFIG_LABEL = 'CLOCKLOCK_CONFIG_DATA'
-export const DELAY = 5000
+export const DELAY_DEFAULT = 2000
 export const DURATION_LIST =[
+  { name: '0 second', value: 0 },
   { name: '5 minutes', value: 5 * 60 * 1000 },
   { name: '10 minutes', value: 10 * 60 * 1000 },
   { name: '30 minutes', value: 30 * 60 * 1000 },

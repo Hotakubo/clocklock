@@ -1,6 +1,7 @@
 export type Data = {
   domain: string;
   isSubdomainIncluded: boolean;
+  isGrayscaleEnabled: boolean;
   duration: number;
   elapsed: number;
   updatedDate: number;
@@ -8,4 +9,5 @@ export type Data = {
 
 export type ConfigData = {
   isElapsedShow: boolean;
+  isGrayscaleEnabled: boolean;
 }

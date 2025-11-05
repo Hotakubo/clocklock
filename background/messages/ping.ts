@@ -49,12 +49,14 @@ const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
 
     res.send({
       isMatch,
+      isGrayscaleEnabled: value.isGrayscaleEnabled,
       elapsed: value.elapsed,
       duration: value.duration
     })
   } else {
     res.send({
       isMatch: false,
+      isGrayscaleEnabled: false,
       elapsed: 0,
       duration: 0
     })

@@ -2,7 +2,7 @@ import type { PlasmoCSConfig, PlasmoGetStyle } from 'plasmo'
 import type { Data, ConfigData } from '~/shared/types'
 import { useState, useEffect } from 'react'
 import { sendToBackground } from "@plasmohq/messaging"
-import { DELAY, DURATION_LIST } from '~/shared/constants'
+import { DELAY_DEFAULT, DURATION_LIST } from '~/shared/constants'
 import { diffMs, parseElapsed } from '~/shared/elapsed'
 import styleText from "data-text:~/shared/style.css"
 
@@ -72,6 +72,21 @@ const Cover = () => {
       heightSet(document.documentElement.scrollHeight)
     }
 
+    const checkGrayscale = async () => {
+      const data = await sendToBackground({
+        name: 'ping',
+        body: {
+          domain: _currentHostname()
+        }
+      })
+
+      if (data.isGrayscaleEnabled) {
+        document.documentElement.style.filter = 'grayscale(100%)'
+      } else {
+        document.documentElement.style.filter = 'none'
+      }
+    }
+
     const checkElapsed = async () => {
       const data = await sendToBackground({
         name: 'ping',
@@ -92,8 +107,12 @@ const Cover = () => {
     }
 
     checkElapsed()
+    checkGrayscale()
 
-    setInterval(() => checkElapsed(), DELAY)
+    setInterval(() => {
+      checkElapsed()
+      checkGrayscale()
+    }, DELAY_DEFAULT)
 
     window.addEventListener('resize', handleResize)
     window.addEventListener('scroll', handleScroll)
