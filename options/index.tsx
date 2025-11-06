@@ -183,6 +183,8 @@ function Options() {
     }
 
     for (const v of saveData) {
+      if (!storageData) continue
+
       const liveValue = getStorageData(v.domain)
 
       if (liveValue) {

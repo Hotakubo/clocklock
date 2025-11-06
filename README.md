@@ -35,6 +35,14 @@ You can always disable this extension or find ways around it, but even a slight 
     - `/messages/ping.ts`
         - Respond with a boolean value if the time limit is exceeded
 
-## Shell
+## Develop
 
-- `npm run build -- --zip`
+1. `npm run dev`
+1. `Developer mode` turn on of Chrome
+1. Upload `build/chrome-mv3-dev` to `Load unpacked`
+
+## Publish
+
+1. Change `package.json` version
+1. `npm run build -- --zip`
+1. Upload `build/chrome-mv3-prod.zip`

@@ -37,6 +37,8 @@ const checkOpenTabs = async () => {
   const data: Data[] = await storage.get(STORAGE_LABEL)
   const domains = await tabsToDomains()
 
+  if (!data) return
+
   for (const v of data) {
     const isMatch = _isDomainMatch({
       tabDomains: domains,
