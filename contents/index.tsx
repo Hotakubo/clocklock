@@ -72,22 +72,7 @@ const Cover = () => {
       heightSet(document.documentElement.scrollHeight)
     }
 
-    const checkGrayscale = async () => {
-      const data = await sendToBackground({
-        name: 'ping',
-        body: {
-          domain: _currentHostname()
-        }
-      })
-
-      if (data.isGrayscaleEnabled) {
-        document.documentElement.style.filter = 'grayscale(100%)'
-      } else {
-        document.documentElement.style.filter = 'none'
-      }
-    }
-
-    const checkElapsed = async () => {
+    const checkElapsedGrayscale = async () => {
       const data = await sendToBackground({
         name: 'ping',
         body: {
@@ -104,15 +89,17 @@ const Cover = () => {
       if (config) {
         isElapsedShowSet(config.isElapsedShow)
       }
+
+      if (data.isGrayscaleEnabled) {
+        document.documentElement.style.filter = 'grayscale(100%)'
+      } else {
+        document.documentElement.style.filter = 'none'
+      }
     }
 
-    checkElapsed()
-    checkGrayscale()
+    checkElapsedGrayscale()
 
-    setInterval(() => {
-      checkElapsed()
-      checkGrayscale()
-    }, DELAY_DEFAULT)
+    setInterval(() => checkElapsedGrayscale(), DELAY_DEFAULT)
 
     window.addEventListener('resize', handleResize)
     window.addEventListener('scroll', handleScroll)
