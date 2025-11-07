@@ -2,6 +2,7 @@ import type { Data } from '~/shared/types'
 import { Storage } from '@plasmohq/storage'
 import { STORAGE_LABEL, DELAY_DEFAULT } from '~/shared/constants'
 import { tabsToDomains } from '~/shared/elapsed'
+import { logger } from '~/shared/logger'
 
 const storage = new Storage()
 
@@ -60,5 +61,30 @@ const checkOpenTabs = async () => {
 
   await storage.set(STORAGE_LABEL, data)
 }
+
+chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
+  if (changeInfo.status === 'complete' && tab.url) {
+    const data: Data[] = await storage.get(STORAGE_LABEL)
+
+    if (!data) return
+
+    const hostname = new URL(tab.url).hostname
+
+    const isMatch = data.some(v => _isDomainMatch({
+        tabDomains: [hostname],
+        storageDomain: {
+          domain: v.domain,
+          isSubdomainIncluded: v.isSubdomainIncluded
+        }
+      }))
+
+    if (isMatch) {
+      chrome.scripting.executeScript({
+        target: { tabId },
+        files: ['content.js']
+      })
+    }
+  }
+})
 
 setInterval(() => checkOpenTabs(), DELAY_DEFAULT)

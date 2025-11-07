@@ -1,7 +1,7 @@
 {
   "name": "clocklock",
   "displayName": "ClockLock",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "Stop wasting time against your will.",
   "author": "Hotakubo",
   "scripts": {
@@ -14,11 +14,12 @@
   },
   "manifest": {
     "host_permissions": [
-      "https://*/*"
+      "<all_urls>"
     ],
     "permissions": [
       "tabs",
-      "storage"
+      "storage",
+      "scripting"
     ]
   },
   "dependencies": {

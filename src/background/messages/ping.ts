@@ -12,6 +12,8 @@ const _getValue = async ({
 }) => {
   const data: Data[] = await storage.get(STORAGE_LABEL)
 
+  if (!data) return null
+
   return data.find(v => domain.endsWith(v.domain)) || null
 }
 
