@@ -83,8 +83,8 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
         target: { tabId },
         files: ['content.js']
       })
-
-      setInterval(() => checkOpenTabs(), DELAY_DEFAULT)
     }
   }
 })
+
+setInterval(() => checkOpenTabs(), DELAY_DEFAULT)
