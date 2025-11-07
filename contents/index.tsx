@@ -1,4 +1,4 @@
-import type { PlasmoCSConfig, PlasmoGetStyle } from 'plasmo'
+import type { PlasmoGetStyle } from 'plasmo'
 import type { Data, ConfigData } from '~/shared/types'
 import { useState, useEffect } from 'react'
 import { sendToBackground } from "@plasmohq/messaging"
@@ -10,13 +10,6 @@ export const getStyle: PlasmoGetStyle = () => {
   const style = document.createElement('style')
   style.textContent = styleText
   return style
-}
-
-export const config: PlasmoCSConfig = {
-  matches: [
-    'https://*/*',
-    'http://*/*'
-  ]
 }
 
 const _currentHostname = (): string => {
