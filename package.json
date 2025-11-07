@@ -14,11 +14,12 @@
   },
   "manifest": {
     "host_permissions": [
-      "https://*/*"
+      "<all_urls>"
     ],
     "permissions": [
       "tabs",
-      "storage"
+      "storage",
+      "scripting"
     ]
   },
   "dependencies": {
