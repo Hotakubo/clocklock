@@ -2,6 +2,7 @@ import type { Data } from '../shared/types'
 import { Storage } from '@plasmohq/storage'
 import { STORAGE_LABEL, DELAY_DEFAULT } from '../shared/constants'
 import { tabsToDomains } from '../shared/elapsed'
+import { urlToDomain } from '../shared/parsed'
 
 const storage = new Storage()
 
@@ -93,6 +94,7 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
     const data: Data[] = await storage.get(STORAGE_LABEL)
 
     if (!data) return
+    if (urlToDomain({ url: tab.url }) === '') return
 
     const hostname = new URL(tab.url).hostname
 

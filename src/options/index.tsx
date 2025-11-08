@@ -8,6 +8,7 @@ import Snackbar from '../parts/Snackbar'
 import Add from '../parts/Add'
 import Delete from '../parts/Delete'
 import { STORAGE_LABEL, DURATION_LIST } from '../shared/constants'
+import { urlToDomain } from '../shared/parsed'
 import '../shared/style.css'
 
 const schema = {
@@ -53,15 +54,6 @@ const _check = (data: { domain: Data['domain'] }[]) => {
   }
 
   return null
-}
-
-const _urlToDomain = ({ url }: { url: string }) => {
-  try {
-    const parsedUrl = new URL(url)
-    return parsedUrl.hostname
-  } catch (e) {
-    return ''
-  }
 }
 
 const Domain = ({
@@ -136,7 +128,7 @@ function Options() {
   }: {
     domain: Data['domain'];
   }) => {
-    const normalizedDomain = _urlToDomain({ url: domain })
+    const normalizedDomain = urlToDomain({ url: domain })
 
     if (normalizedDomain !== '') {
       const nextData = draftData.map(v => v.domain === domain ? { ...v, domain: normalizedDomain } : v)
