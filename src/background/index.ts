@@ -33,7 +33,7 @@ const _isDomainMatch = ({
   })
 }
 
-const getCoverContentScript = (() => {
+const _getCoverContentScript = (() => {
   let cachedScript: string | null = null
 
   return (): string | null => {
@@ -104,7 +104,7 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
         }
       }))
 
-    const contentScript = getCoverContentScript()
+    const contentScript = _getCoverContentScript()
 
     if (isMatch && contentScript) {
       chrome.scripting.executeScript({
