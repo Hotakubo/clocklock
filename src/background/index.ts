@@ -35,9 +35,11 @@ const _isDomainMatch = ({
 
 const checkOpenTabs = async () => {
   const data: Data[] = await storage.get(STORAGE_LABEL)
-  const domains = await tabsToDomains()
 
   if (!data) return
+
+  const domains = await tabsToDomains()
+  let hasChanges = false
 
   for (const v of data) {
     const isMatch = _isDomainMatch({
@@ -50,15 +52,19 @@ const checkOpenTabs = async () => {
 
     if (isMatch && v.elapsed <= v.duration) {
       v.elapsed = v.elapsed + DELAY_DEFAULT
+      hasChanges = true
     }
 
     if (_isUpdateDateBefore({ updatedDate: v.updatedDate })) {
       v.elapsed = 0
       v.updatedDate = new Date().getTime()
+      hasChanges = true
     }
   }
 
-  await storage.set(STORAGE_LABEL, data)
+  if (hasChanges) {
+    await storage.set(STORAGE_LABEL, data)
+  }
 }
 
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
