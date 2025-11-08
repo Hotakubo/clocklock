@@ -1,14 +1,14 @@
-import type { Data } from '~/shared/types'
+import type { Data } from '../shared/types'
 import { z } from 'zod'
 import { useState, useEffect, useId } from 'react'
 import { Storage } from '@plasmohq/storage'
-import Select from '~/parts/Select'
-import Checkbox from '~/parts/Checkbox'
-import Snackbar from '~/parts/Snackbar'
-import Add from '~/parts/Add'
-import Delete from '~/parts/Delete'
-import { STORAGE_LABEL, DURATION_LIST } from '~/shared/constants'
-import '~/shared/style.css'
+import Select from '../parts/Select'
+import Checkbox from '../parts/Checkbox'
+import Snackbar from '../parts/Snackbar'
+import Add from '../parts/Add'
+import Delete from '../parts/Delete'
+import { STORAGE_LABEL, DURATION_LIST } from '../shared/constants'
+import '../shared/style.css'
 
 const schema = {
   domain: z.string().regex(

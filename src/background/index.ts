@@ -1,12 +1,11 @@
-import type { Data } from '~/shared/types'
+import type { Data } from '../shared/types'
 import { Storage } from '@plasmohq/storage'
-import { STORAGE_LABEL, DELAY_DEFAULT } from '~/shared/constants'
-import { tabsToDomains } from '~/shared/elapsed'
-import { logger } from '~/shared/logger'
+import { STORAGE_LABEL, DELAY_DEFAULT } from '../shared/constants'
+import { tabsToDomains } from '../shared/elapsed'
 
 const storage = new Storage()
 
-const _isUpdateDateBefore = ({ updatedDate }: { updatedDate: Data['updatedDate'] }) => {
+const _isResetDate = ({ updatedDate }: { updatedDate: Data['updatedDate'] }) => {
   const today = new Date()
   const updateDay = new Date(updatedDate)
 
@@ -34,11 +33,34 @@ const _isDomainMatch = ({
   })
 }
 
+const getCoverContentScript = (() => {
+  let cachedScript: string | null = null
+
+  return (): string | null => {
+    if (cachedScript !== null) {
+      return cachedScript
+    }
+
+    const manifest = chrome.runtime.getManifest()
+    const scripts =
+      manifest.content_scripts?.flatMap(script => script.js ?? []) ?? []
+
+    cachedScript =
+      scripts.find(script => script.startsWith('contents.')) ??
+      scripts.find(script => script.startsWith('content.')) ??
+      null
+
+    return cachedScript
+  }
+})()
+
 const checkOpenTabs = async () => {
   const data: Data[] = await storage.get(STORAGE_LABEL)
-  const domains = await tabsToDomains()
 
   if (!data) return
+
+  const domains = await tabsToDomains()
+  let hasChanges = false
 
   for (const v of data) {
     const isMatch = _isDomainMatch({
@@ -51,15 +73,19 @@ const checkOpenTabs = async () => {
 
     if (isMatch && v.elapsed <= v.duration) {
       v.elapsed = v.elapsed + DELAY_DEFAULT
+      hasChanges = true
     }
 
-    if (_isUpdateDateBefore({ updatedDate: v.updatedDate })) {
+    if (_isResetDate({ updatedDate: v.updatedDate })) {
       v.elapsed = 0
       v.updatedDate = new Date().getTime()
+      hasChanges = true
     }
   }
 
-  await storage.set(STORAGE_LABEL, data)
+  if (hasChanges) {
+    await storage.set(STORAGE_LABEL, data)
+  }
 }
 
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
@@ -78,10 +104,12 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
         }
       }))
 
-    if (isMatch) {
+    const contentScript = getCoverContentScript()
+
+    if (isMatch && contentScript) {
       chrome.scripting.executeScript({
         target: { tabId },
-        files: ['content.js']
+        files: [contentScript]
       })
     }
   }

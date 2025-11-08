@@ -1,14 +1,14 @@
-import type { Data, ConfigData } from '~/shared/types'
+import type { Data, ConfigData } from '../shared/types'
 import React, { useEffect, useState } from 'react'
 import { Storage } from '@plasmohq/storage'
 import {
   STORAGE_LABEL,
   STORAGE_CONFIG_LABEL,
   DELAY_DEFAULT
-} from '~/shared/constants'
-import { diffMs, parseElapsed } from '~/shared/elapsed'
-import Checkbox from '~/parts/Checkbox'
-import '~/shared/style.css'
+} from '../shared/constants'
+import { diffMs, parseElapsed } from '../shared/elapsed'
+import Checkbox from '../parts/Checkbox'
+import '../shared/style.css'
 
 const storage = new Storage()
 

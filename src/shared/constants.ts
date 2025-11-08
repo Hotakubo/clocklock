@@ -11,5 +11,6 @@ export const DURATION_LIST =[
   { name: '3 hours', value: 3 * 60 * 60 * 1000 },
   { name: '4 hours', value: 4 * 60 * 60 * 1000 },
   { name: '5 hours', value: 5 * 60 * 60 * 1000 },
-  { name: '6 hours', value: 6 * 60 * 60 * 1000 }
+  { name: '6 hours', value: 6 * 60 * 60 * 1000 },
+  { name: '24 hours', value: 24 * 60 * 60 * 1000 }
 ]
