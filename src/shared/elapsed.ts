@@ -37,7 +37,6 @@ export const parseElapsed = ({
 
 export const tabsToDomains = async () => {
   const tabs = await chrome.tabs.query({})
-  const httpTabs = tabs.filter(tab => urlToDomain({ url: tab.url }) !== '')
 
-  return httpTabs.map(v => urlToDomain({ url: v.url }))
+  return tabs.filter(tab => urlToDomain({ url: tab.url }) !== '').map(v => urlToDomain({ url: v.url }))
 }
