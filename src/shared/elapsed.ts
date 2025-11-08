@@ -34,7 +34,20 @@ export const parseElapsed = ({
   return diff < 0 ? `00:00:00` : `${hours}:${minutes}:${seconds}`
 }
 
+const _isParsableUrl = (value?: string | null) => {
+  if (!value) return false
+
+  try {
+    new URL(value)
+    return true
+  } catch {
+    return false
+  }
+}
+
 export const tabsToDomains = async () => {
   const tabs = await chrome.tabs.query({})
-  return tabs.map(v => new URL(v.url).hostname)
+  const visibleTabs = tabs.filter(tab => _isParsableUrl(tab.url))
+
+  return visibleTabs.map(tab => new URL(tab.url as string).hostname)
 }
