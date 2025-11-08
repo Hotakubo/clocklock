@@ -3,6 +3,7 @@ import { Storage } from '@plasmohq/storage'
 import { STORAGE_LABEL, DELAY_DEFAULT } from '../shared/constants'
 import { tabsToDomains } from '../shared/elapsed'
 import { urlToDomain } from '../shared/parsed'
+import { logger } from '../shared/logger'
 
 const storage = new Storage()
 
@@ -110,6 +111,8 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
     const contentScript = _getCoverContentScript()
 
     if (isMatch && contentScript) {
+      logger.info(`executeScript: ${hostname}`)
+
       chrome.scripting.executeScript({
         target: { tabId },
         files: [contentScript]
