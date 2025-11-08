@@ -1,4 +1,4 @@
-import type { Data } from '~/shared/types'
+import type { Data } from '../shared/types'
 import { intervalToDuration, differenceInMilliseconds } from 'date-fns'
 
 export const diffMs = ({

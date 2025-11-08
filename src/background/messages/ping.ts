@@ -1,7 +1,7 @@
 import type { PlasmoMessaging } from '@plasmohq/messaging'
-import type { Data } from '~/shared/types'
+import type { Data } from '../../shared/types'
 import { Storage } from '@plasmohq/storage'
-import { STORAGE_LABEL } from '~/shared/constants'
+import { STORAGE_LABEL } from '../../shared/constants'
 
 const storage = new Storage()
 

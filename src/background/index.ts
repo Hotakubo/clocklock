@@ -1,8 +1,7 @@
-import type { Data } from '~/shared/types'
+import type { Data } from '../shared/types'
 import { Storage } from '@plasmohq/storage'
-import { STORAGE_LABEL, DELAY_DEFAULT } from '~/shared/constants'
-import { tabsToDomains } from '~/shared/elapsed'
-import { logger } from '~/shared/logger'
+import { STORAGE_LABEL, DELAY_DEFAULT } from '../shared/constants'
+import { tabsToDomains } from '../shared/elapsed'
 
 const storage = new Storage()
 

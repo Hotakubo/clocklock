@@ -1,10 +1,10 @@
 import type { PlasmoGetStyle } from 'plasmo'
-import type { Data, ConfigData } from '~/shared/types'
+import type { Data, ConfigData } from '../shared/types'
 import { useState, useEffect } from 'react'
 import { sendToBackground } from "@plasmohq/messaging"
-import { DELAY_DEFAULT, DURATION_LIST } from '~/shared/constants'
-import { diffMs, parseElapsed } from '~/shared/elapsed'
-import styleText from "data-text:~/shared/style.css"
+import { DELAY_DEFAULT, DURATION_LIST } from '../shared/constants'
+import { diffMs, parseElapsed } from '../shared/elapsed'
+import styleText from "data-text:../shared/style.css"
 
 export const getStyle: PlasmoGetStyle = () => {
   const style = document.createElement('style')
