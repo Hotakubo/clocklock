@@ -33,6 +33,27 @@ const _isDomainMatch = ({
   })
 }
 
+const getCoverContentScript = (() => {
+  let cachedScript: string | null = null
+
+  return (): string | null => {
+    if (cachedScript !== null) {
+      return cachedScript
+    }
+
+    const manifest = chrome.runtime.getManifest()
+    const scripts =
+      manifest.content_scripts?.flatMap(script => script.js ?? []) ?? []
+
+    cachedScript =
+      scripts.find(script => script.startsWith('contents.')) ??
+      scripts.find(script => script.startsWith('content.')) ??
+      null
+
+    return cachedScript
+  }
+})()
+
 const checkOpenTabs = async () => {
   const data: Data[] = await storage.get(STORAGE_LABEL)
 
@@ -83,10 +104,12 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
         }
       }))
 
-    if (isMatch) {
+    const contentScript = getCoverContentScript()
+
+    if (isMatch && contentScript) {
       chrome.scripting.executeScript({
         target: { tabId },
-        files: ['content.js']
+        files: [contentScript]
       })
     }
   }
