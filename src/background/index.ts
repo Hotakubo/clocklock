@@ -2,6 +2,8 @@ import type { Data } from '../shared/types'
 import { Storage } from '@plasmohq/storage'
 import { STORAGE_LABEL, DELAY_DEFAULT } from '../shared/constants'
 import { tabsToDomains } from '../shared/elapsed'
+import { urlToDomain } from '../shared/parsed'
+import { logger } from '../shared/logger'
 
 const storage = new Storage()
 
@@ -33,7 +35,7 @@ const _isDomainMatch = ({
   })
 }
 
-const getCoverContentScript = (() => {
+const _getCoverContentScript = (() => {
   let cachedScript: string | null = null
 
   return (): string | null => {
@@ -77,6 +79,8 @@ const checkOpenTabs = async () => {
     }
 
     if (_isResetDate({ updatedDate: v.updatedDate })) {
+      logger.info(`reset elapsed: ${v.domain}`)
+
       v.elapsed = 0
       v.updatedDate = new Date().getTime()
       hasChanges = true
@@ -94,7 +98,9 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
 
     if (!data) return
 
-    const hostname = new URL(tab.url).hostname
+    const hostname = urlToDomain({ url: tab.url })
+
+    if (hostname === '') return
 
     const isMatch = data.some(v => _isDomainMatch({
         tabDomains: [hostname],
@@ -104,9 +110,11 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
         }
       }))
 
-    const contentScript = getCoverContentScript()
+    const contentScript = _getCoverContentScript()
 
     if (isMatch && contentScript) {
+      logger.info(`executeScript: ${hostname}`)
+
       chrome.scripting.executeScript({
         target: { tabId },
         files: [contentScript]

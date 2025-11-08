@@ -1,16 +1,6 @@
 import type { Data } from '../shared/types'
 import { intervalToDuration, differenceInMilliseconds } from 'date-fns'
-
-const _isParsableUrl = (value?: string | null) => {
-  if (!value) return false
-
-  try {
-    new URL(value)
-    return true
-  } catch {
-    return false
-  }
-}
+import { urlToDomain } from '../shared/parsed'
 
 export const diffMs = ({
   duration,
@@ -47,7 +37,6 @@ export const parseElapsed = ({
 
 export const tabsToDomains = async () => {
   const tabs = await chrome.tabs.query({})
-  const visibleTabs = tabs.filter(tab => _isParsableUrl(tab.url))
 
-  return visibleTabs.map(tab => new URL(tab.url as string).hostname)
+  return tabs.filter(tab => urlToDomain({ url: tab.url }) !== '').map(v => urlToDomain({ url: v.url }))
 }

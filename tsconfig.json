@@ -7,5 +7,8 @@
     ".plasmo/index.d.ts",
     "./**/*.ts",
     "./**/*.tsx"
-  ]
+  ],
+  "compilerOptions": {
+    "moduleResolution": "bundler"
+  }
 }
