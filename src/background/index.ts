@@ -79,6 +79,8 @@ const checkOpenTabs = async () => {
     }
 
     if (_isResetDate({ updatedDate: v.updatedDate })) {
+      logger.info(`reset elapsed: ${v.domain}`)
+
       v.elapsed = 0
       v.updatedDate = new Date().getTime()
       hasChanges = true
