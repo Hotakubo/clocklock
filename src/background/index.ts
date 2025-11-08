@@ -94,9 +94,10 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
     const data: Data[] = await storage.get(STORAGE_LABEL)
 
     if (!data) return
-    if (urlToDomain({ url: tab.url }) === '') return
 
-    const hostname = new URL(tab.url).hostname
+    const hostname = urlToDomain({ url: tab.url })
+
+    if (hostname === '') return
 
     const isMatch = data.some(v => _isDomainMatch({
         tabDomains: [hostname],
