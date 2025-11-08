@@ -5,7 +5,7 @@ import { tabsToDomains } from '../shared/elapsed'
 
 const storage = new Storage()
 
-const _isUpdateDateBefore = ({ updatedDate }: { updatedDate: Data['updatedDate'] }) => {
+const _isResetDate = ({ updatedDate }: { updatedDate: Data['updatedDate'] }) => {
   const today = new Date()
   const updateDay = new Date(updatedDate)
 
@@ -55,7 +55,7 @@ const checkOpenTabs = async () => {
       hasChanges = true
     }
 
-    if (_isUpdateDateBefore({ updatedDate: v.updatedDate })) {
+    if (_isResetDate({ updatedDate: v.updatedDate })) {
       v.elapsed = 0
       v.updatedDate = new Date().getTime()
       hasChanges = true
