@@ -1,6 +1,17 @@
 import type { Data } from '../shared/types'
 import { intervalToDuration, differenceInMilliseconds } from 'date-fns'
 
+const _isParsableUrl = (value?: string | null) => {
+  if (!value) return false
+
+  try {
+    new URL(value)
+    return true
+  } catch {
+    return false
+  }
+}
+
 export const diffMs = ({
   duration,
   elapsed
@@ -32,17 +43,6 @@ export const parseElapsed = ({
   const seconds = time.seconds ? String(time.seconds).padStart(2, '0') : '00'
 
   return diff < 0 ? `00:00:00` : `${hours}:${minutes}:${seconds}`
-}
-
-const _isParsableUrl = (value?: string | null) => {
-  if (!value) return false
-
-  try {
-    new URL(value)
-    return true
-  } catch {
-    return false
-  }
 }
 
 export const tabsToDomains = async () => {
