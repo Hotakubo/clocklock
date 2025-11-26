@@ -1,7 +1,7 @@
 {
   "name": "clocklock",
   "displayName": "ClockLock",
-  "version": "1.5.1",
+  "version": "1.6.0",
   "description": "Stop wasting time against your will.",
   "author": "Hotakubo",
   "scripts": {
